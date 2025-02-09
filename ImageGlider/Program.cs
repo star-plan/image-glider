@@ -24,37 +24,35 @@ using StreamWriter logWriter = new StreamWriter(logFilePath, append: true);
 Log(logWriter, "程序启动。");
 
 // 提示用户输入源扩展名和目标扩展名
-var reEnterFlag = true;
-var sourceExt = "";
-var targetExt = "";
-while (reEnterFlag) {
+string sourceExt;
+string targetExt;
+
+// 获取原始文件扩展名
+while (true) {
     Console.Write("请输入原始文件扩展名（例如 .jfif）：");
     var input = Console.ReadLine()?.Trim().ToLowerInvariant();
     if (!string.IsNullOrWhiteSpace(input)) {
-        reEnterFlag = false;
-        continue;
+        sourceExt = input;
+        if (!sourceExt.StartsWith('.'))
+            sourceExt = "." + sourceExt;
+        break;
     }
-    
-    targetExt = input;
-
-    if (sourceExt != null && !sourceExt.StartsWith('.'))
-        sourceExt = "." + sourceExt;
+    Console.WriteLine("输入不能为空，请重新输入。");
 }
 
-reEnterFlag = true;
-while (reEnterFlag) {
+// 获取目标文件扩展名
+while (true) {
     Console.Write("请输入目标文件扩展名（例如 .jpeg 或 .png）：");
     var input = Console.ReadLine()?.Trim().ToLowerInvariant();
     if (!string.IsNullOrWhiteSpace(input)) {
-        reEnterFlag = false;
-        continue;
+        targetExt = input;
+        if (!targetExt.StartsWith('.'))
+            targetExt = "." + targetExt;
+        break;
     }
-
-    targetExt = input;
-
-    if (targetExt != null && !targetExt.StartsWith('.'))
-        targetExt = "." + targetExt;
+    Console.WriteLine("输入不能为空，请重新输入。");
 }
+
 
 Log(logWriter, $"用户指定的源扩展名: {sourceExt}，目标扩展名: {targetExt}");
 
