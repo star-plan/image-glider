@@ -1,6 +1,13 @@
 ﻿# ImageGlider
 
-**ImageGlider** 是一个跨平台的图像格式转换工具套件，使用 C# (.NET 8) 和 [ImageSharp](https://github.com/SixLabors/ImageSharp) 实现。项目采用模块化架构设计，包含核心类库、命令行工具、示例程序和完整的单元测试，支持 AOT 编译以获得原生性能。
+![License](https://img.shields.io/badge/license-MIT-blue)
+![.NET](https://img.shields.io/badge/.NET-9.0-purple)
+
+**ImageGlider** 是一个纯 C# AOT 实现的跨平台图像格式转换工具套件，使用 C# (.NET 9) 和 [ImageSharp](https://github.com/SixLabors/ImageSharp) 实现。项目采用模块化架构设计，包含核心类库、命令行工具、示例程序和完整的单元测试，支持 AOT 编译以获得原生性能。
+
+通过ImageGlider，您可以轻松进行图像格式转换，完全摆脱命令行依赖，无需 ImageMagick、Node.js 或 Python，适合在 .NET 项目中内嵌、分发或集成自动打包流程中使用。
+
+🚀 跨平台、零依赖、极速转换，一切尽在 ImageGlider！
 
 ## 项目架构
 
@@ -9,10 +16,13 @@
 - **ImageGlider.Example** - 示例程序，展示核心类库的典型用法
 - **ImageGlider.Tests** - 单元测试项目，确保代码质量
 
-## 特性
+## ✨ 功能特点
 
-- **跨平台**：基于 .NET 8 和 ImageSharp，支持 Windows、Linux、macOS 等平台
-- **AOT 编译**：利用 .NET 8 的 AOT 功能，提供更快的启动速度和原生性能
+- 🖼️ 支持多种图像格式转换：JPEG、PNG、GIF、BMP、TIFF、WebP 等
+- 🔄 单文件转换和批量转换功能
+- 🚀 **跨平台**：基于 .NET 9 和 ImageSharp，支持 Windows、Linux、macOS 等平台
+- ⚡ **AOT 编译**：利用 .NET 9 的 AOT 功能，提供更快的启动速度和原生性能
+- 📦 **零依赖**：无需安装额外的图像处理工具或运行时
 - **模块化设计**：核心功能封装为独立类库，便于集成到其他项目中
 - **命令行工具**：提供功能完整的 CLI 工具，支持丰富的命令行参数
 - **单文件转换**：支持转换单个图像文件，可指定 JPEG 质量参数
@@ -23,15 +33,31 @@
 
 ## 前置条件
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 - 支持的图像格式：JPEG、PNG、GIF、BMP、TIFF、WebP 等（由 ImageSharp 提供支持）
 
 ## 依赖项
 
-- **SixLabors.ImageSharp** (3.1.11) - 跨平台图像处理库
+- **SixLabors.ImageSharp** (3.1.8) - 跨平台图像处理库
 - **xUnit** - 单元测试框架（仅测试项目）
 
-## 快速开始
+## 📦 安装
+
+### 作为 .NET Global Tool 安装
+
+```bash
+dotnet tool install --global ImageGlider.Cli
+```
+
+### 从源码构建
+
+```bash
+git clone https://github.com/Deali-Axy/image-glider.git
+cd image-glider
+dotnet build -c Release
+```
+
+## 🚀 快速开始
 
 ### 克隆仓库
 
@@ -81,32 +107,32 @@ dotnet run --project src/ImageGlider.Example
 
 ## 使用说明
 
-### 命令行工具 (ImageGlider.Cli)
+### 命令行工具使用方法
 
 #### 查看帮助信息
 
 ```bash
-ImageGlider.Cli help
+imageglider --help
 ```
 
 #### 单文件转换
 
 ```bash
 # 基本用法
-ImageGlider.Cli convert --source image.jfif --target image.jpeg
+imageglider convert --source image.jfif --target image.jpeg
 
 # 指定 JPEG 质量
-ImageGlider.Cli convert -s image.jfif -t image.jpeg -q 85
+imageglider convert -s image.jfif -t image.jpeg -q 85
 ```
 
 #### 批量转换
 
 ```bash
 # 基本批量转换（当前目录）
-ImageGlider.Cli batch --source-ext .jfif --target-ext .jpeg
+imageglider batch --source-ext .jfif --target-ext .jpeg
 
 # 完整参数示例
-ImageGlider.Cli batch -se .jfif -te .jpeg -sd ./input -od ./output -ld ./logs -q 90
+imageglider batch -se .jfif -te .jpeg -sd ./input -od ./output -ld ./logs -q 90
 ```
 
 #### 参数说明
@@ -149,13 +175,9 @@ logger.LogInfo("转换开始");
 logger.LogError("转换失败", exception);
 ```
 
-## 贡献
+## 🤝 贡献
 
 欢迎贡献代码、提交 issue 或 pull request，共同完善这个项目。
-
-## 许可
-
-本项目采用 MIT License 许可协议。
 
 ## 开发和测试
 
@@ -189,10 +211,100 @@ dotnet test --filter "TestMethodName"
 dotnet test --collect:"XPlat Code Coverage"
 ```
 
+## 🛠️ 开发者指南
+
+### 构建项目
+
+```bash
+dotnet build
+```
+
+### 发布模式
+
+ImageGlider 支持两种发布模式：
+
+#### AOT 发布 (原生性能，无需 .NET 运行时)
+
+```bash
+dotnet publish src/ImageGlider.Cli -r win-x64 -c release /p:PublishAot=true /p:TrimMode=full /p:InvariantGlobalization=true /p:IlcGenerateStackTraceData=false /p:IlcOptimizationPreference=Size /p:IlcFoldIdenticalMethodBodies=true /p:JsonSerializerIsReflectionEnabledByDefault=true
+```
+
+支持的平台:
+
+- Windows: win-x64
+- macOS: osx-x64, osx-arm64
+- Linux: linux-x64, linux-arm64
+
+#### Framework Dependent 发布 (需要 .NET 运行时)
+
+```bash
+# 发布为 NuGet 包 (.NET Tool)
+dotnet pack src/ImageGlider.Cli
+
+# 安装本地打包的工具
+dotnet tool install --global --add-source ./src/ImageGlider.Cli/nupkg ImageGlider.Cli
+```
+
+### 两种发布流程
+
+#### AOT 发布流程 (独立应用)
+
+1. 编译 AOT 版本:
+```bash
+dotnet publish src/ImageGlider.Cli -r win-x64 -c release /p:PublishAot=true /p:TrimMode=full /p:InvariantGlobalization=true /p:IlcGenerateStackTraceData=false /p:IlcOptimizationPreference=Size /p:IlcFoldIdenticalMethodBodies=true /p:JsonSerializerIsReflectionEnabledByDefault=true
+```
+
+2. 打包生成的文件:
+```bash
+# 进入发布目录
+cd src/ImageGlider.Cli/bin/release/net9.0/win-x64/publish/
+# 创建 zip 包
+powershell Compress-Archive -Path * -DestinationPath imageglider-win-x64.zip
+```
+
+3. 将生成的 zip 文件上传到 GitHub Releases
+
+#### .NET Tool 发布流程
+
+1. 打包为 NuGet 包:
+```bash
+dotnet pack src/ImageGlider.Cli
+```
+
+2. 生成的包将位于 `./src/ImageGlider.Cli/nupkg` 目录中
+
+3. 发布到 NuGet:
+```bash
+dotnet nuget push ./src/ImageGlider.Cli/nupkg/ImageGlider.Cli.1.0.0.nupkg --api-key 您的API密钥 --source https://api.nuget.org/v3/index.json
+```
+
+### 本地测试
+
+#### 测试 .NET Tool
+
+```bash
+# 安装本地打包的工具
+dotnet tool install --global --add-source ./src/ImageGlider.Cli/nupkg ImageGlider.Cli
+
+# 卸载工具
+dotnet tool uninstall --global ImageGlider.Cli
+```
+
+#### 测试 AOT 发布版本
+
+直接运行生成的可执行文件:
+```bash
+./src/ImageGlider.Cli/bin/release/net9.0/win-x64/publish/ImageGlider.Cli.exe
+```
+
+## 📄 许可证
+
+MIT License
+
 ## 致谢
 
 - 感谢 [SixLabors ImageSharp](https://github.com/SixLabors/ImageSharp) 团队提供强大的跨平台图像处理库
-- 感谢 Microsoft .NET 团队提供 .NET 8 的跨平台支持和 AOT 编译特性
+- 感谢 Microsoft .NET 团队提供 .NET 9 的跨平台支持和 AOT 编译特性
 - 感谢 xUnit 团队提供优秀的测试框架
 - 感谢所有开源社区的贡献者们
 

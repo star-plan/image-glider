@@ -1,14 +1,47 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\ImageGlider\ImageGlider.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <!-- AOT编译设置移至条件属性组 -->
+        <InvariantGlobalization>true</InvariantGlobalization>
+        
+        <!-- .NET Tool 配置 -->
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>imageglider</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+        
+        <!-- 包信息 -->
+        <PackageId>ImageGlider.Cli</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Deali-Axy</Authors>
+        <Description>ImageGlider是一个纯 C# AOT 实现的跨平台图像格式转换工具套件，支持单文件和批量转换，提供命令行工具和核心类库。基于ImageSharp实现，支持JPEG、PNG、GIF、BMP、TIFF、WebP等多种格式。</Description>
+        <PackageTags>image;converter;jpeg;png;gif;bmp;tiff;webp;cli;tool;dotnet-tool;imagesharp;aot</PackageTags>
+        <PackageProjectUrl>https://github.com/Deali-Axy/image-glider</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Deali-Axy/image-glider</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <!-- AOT发布专用设置 -->
+    <PropertyGroup Condition="'$(PublishAot)' == 'true'">
+        <PublishAot>true</PublishAot>
+        <TrimMode>full</TrimMode>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+        <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+        <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+        <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ImageGlider\ImageGlider.csproj" />
+    </ItemGroup>
 
 </Project>
