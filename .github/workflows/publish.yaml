@@ -41,7 +41,7 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       
       - name: 恢复依赖
-        run: dotnet restore ./src/ImageGlider.Cli/ImageGlider.Cli.csproj
+        run: dotnet restore
       
       - name: 运行测试
         run: dotnet test --no-restore
@@ -116,7 +116,7 @@ jobs:
           choco install visualstudio2022buildtools -y --no-progress
       
       - name: 恢复依赖
-        run: dotnet restore ./src/ImageGlider.Cli/ImageGlider.Cli.csproj
+        run: dotnet restore
       
       - name: AOT编译
         run: |
