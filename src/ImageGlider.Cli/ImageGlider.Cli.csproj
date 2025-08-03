@@ -15,7 +15,6 @@
         
         <!-- 包信息 -->
         <PackageId>ImageGlider.Cli</PackageId>
-        <Version>1.0.0</Version>
         <Authors>Deali-Axy</Authors>
         <Description>ImageGlider是一个纯 C# AOT 实现的跨平台图像格式转换工具套件，支持单文件和批量转换，提供命令行工具和核心类库。基于ImageSharp实现，支持JPEG、PNG、GIF、BMP、TIFF、WebP等多种格式。</Description>
         <PackageTags>image;converter;jpeg;png;gif;bmp;tiff;webp;cli;tool;dotnet-tool;imagesharp;aot</PackageTags>

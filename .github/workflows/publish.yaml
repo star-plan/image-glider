@@ -13,22 +13,51 @@ permissions:
   issues: write
 
 jobs:
-  # 第一步：发布NuGet包
-  publish-nuget:
+  # 第一步：运行测试
+  test:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # 获取所有历史记录用于版本号计算
       
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
       
       - name: 缓存NuGet包
-        uses: actions/cache@v3
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      
+      - name: 恢复依赖
+        run: dotnet restore
+      
+      - name: 运行测试
+        run: dotnet test --no-restore --verbosity normal
+
+  # 第二步：发布NuGet包
+  publish-nuget:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取所有历史记录用于版本号计算
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      
+      - name: 缓存NuGet包
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -43,19 +72,22 @@ jobs:
       - name: 恢复依赖
         run: dotnet restore
       
-      - name: 运行测试
-        run: dotnet test --no-restore
-
-      - name: 构建项目
-        run: dotnet build --no-restore -c Release --nologo ./src/ImageGlider.Cli/ImageGlider.Cli.csproj -p:Version=${{ steps.get_version.outputs.VERSION }}
+      - name: 构建核心库
+        run: dotnet build --no-restore -c Release --nologo src/ImageGlider/ImageGlider.csproj -p:Version=${{ steps.get_version.outputs.VERSION }}
       
-      - name: 创建NuGet包
-        run: dotnet pack -c Release ./src/ImageGlider.Cli/ImageGlider.Cli.csproj -p:PackageVersion=${{ steps.get_version.outputs.VERSION }} --no-build --output ./nupkg
+      - name: 构建CLI工具
+        run: dotnet build --no-restore -c Release --nologo src/ImageGlider.Cli/ImageGlider.Cli.csproj -p:Version=${{ steps.get_version.outputs.VERSION }}
+      
+      - name: 创建核心库NuGet包
+        run: dotnet pack -c Release src/ImageGlider/ImageGlider.csproj -p:PackageVersion=${{ steps.get_version.outputs.VERSION }} --no-build --output ./nupkg
+        
+      - name: 创建CLI工具NuGet包
+        run: dotnet pack -c Release src/ImageGlider.Cli/ImageGlider.Cli.csproj -p:PackageVersion=${{ steps.get_version.outputs.VERSION }} --no-build --output ./nupkg
         
       - name: 发布到NuGet Gallery
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_GALLERY_TOKEN }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
-  # 第二步：编译各平台可执行文件
+  # 第三步：编译各平台可执行文件
   build-executables:
     needs: publish-nuget  # 确保在NuGet包发布后运行
     strategy:
@@ -79,7 +111,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # 获取所有历史记录用于版本号计算
       
@@ -89,12 +121,12 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
       
       - name: 缓存NuGet包
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -143,7 +175,7 @@ jobs:
           path: ./ImageGlider-${{ matrix.kind }}-${{ steps.get_version.outputs.VERSION }}${{ matrix.extension }}
           retention-days: 1
 
-  # 第三步：统一上传所有平台可执行文件到GitHub Release
+  # 第四步：统一上传所有平台可执行文件到GitHub Release
   upload-to-release:
     needs: build-executables
     runs-on: ubuntu-latest
