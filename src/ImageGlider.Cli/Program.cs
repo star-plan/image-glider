@@ -40,6 +40,8 @@ class Program
         registry.RegisterCommand(new BatchWatermarkCommand());
         registry.RegisterCommand(new StripMetadataCommand());
         registry.RegisterCommand(new BatchStripMetadataCommand());
+        registry.RegisterCommand(new AdjustColorCommand());
+        registry.RegisterCommand(new BatchAdjustColorCommand());
         
         return registry;
     }
