@@ -63,6 +63,27 @@ public interface IImageResizer : IImageProcessor
     /// <param name="quality">JPEG 质量</param>
     /// <returns>调整结果信息</returns>
     ConversionResult BatchResize(string sourceDirectory, string outputDirectory, string sourceExtension, int? width = null, int? height = null, ImageGlider.Enums.ResizeMode resizeMode = ImageGlider.Enums.ResizeMode.KeepAspectRatio, int quality = 90);
+
+    /// <summary>
+    /// 生成单个图片的缩略图
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="maxSize">缩略图最大边长（像素）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>生成是否成功</returns>
+    bool GenerateThumbnail(string sourceFilePath, string targetFilePath, int maxSize = 150, int quality = 90);
+
+    /// <summary>
+    /// 批量生成指定目录下图片文件的缩略图
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名</param>
+    /// <param name="maxSize">缩略图最大边长（像素）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>生成结果信息</returns>
+    ConversionResult BatchGenerateThumbnails(string sourceDirectory, string outputDirectory, string sourceExtension, int maxSize = 150, int quality = 90);
 }
 
 /// <summary>

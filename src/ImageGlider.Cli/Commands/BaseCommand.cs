@@ -27,6 +27,13 @@ namespace ImageGlider.Cli.Commands
         {
             try
             {
+                // 检查是否请求帮助
+                if (args.Length > 1 && (args[1] == "--help" || args[1] == "-h"))
+                {
+                    ShowHelp();
+                    return 0;
+                }
+                
                 return await ExecuteInternalAsync(args);
             }
             catch (ArgumentException ex)

@@ -34,6 +34,8 @@ class Program
         registry.RegisterCommand(new BatchCompressCommand());
         registry.RegisterCommand(new CropCommand());
         registry.RegisterCommand(new BatchCropCommand());
+        registry.RegisterCommand(new ThumbnailCommand());
+        registry.RegisterCommand(new BatchThumbnailCommand());
         
         return registry;
     }
