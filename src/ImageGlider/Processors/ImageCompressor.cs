@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Metadata;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing.Processors.Quantization;
 
 namespace ImageGlider.Processors;
 
@@ -53,6 +54,10 @@ public class ImageCompressor : IImageCompressor
             // 验证压缩级别范围
             compressionLevel = Math.Max(1, Math.Min(100, compressionLevel));
 
+            // 获取源文件大小
+            var sourceFileInfo = new FileInfo(sourceFilePath);
+            var sourceFileSize = sourceFileInfo.Length;
+
             using var image = Image.Load<Rgba32>(sourceFilePath);
             
             // 根据目标文件扩展名选择合适的编码器
@@ -70,10 +75,8 @@ public class ImageCompressor : IImageCompressor
                     break;
                     
                 case ".png":
-                    var pngEncoder = new PngEncoder
-                    {
-                        CompressionLevel = GetPngCompressionLevel(compressionLevel)
-                    };
+                    // 智能选择PNG编码参数以获得更好的压缩效果
+                    var pngEncoder = CreateOptimizedPngEncoder(image, compressionLevel, preserveMetadata);
                     image.Save(targetFilePath, pngEncoder);
                     break;
                     
@@ -91,7 +94,16 @@ public class ImageCompressor : IImageCompressor
                     break;
             }
 
-            // 如果不保留元数据，则清理元数据（已通过编码器设置实现）
+            // 检查压缩后的文件大小
+            var targetFileInfo = new FileInfo(targetFilePath);
+            var targetFileSize = targetFileInfo.Length;
+
+            // 如果压缩后文件更大，则用原文件替换
+            if (targetFileSize > sourceFileSize)
+            {
+                File.Copy(sourceFilePath, targetFilePath, true);
+            }
+
             return true;
         }
         catch
@@ -193,6 +205,130 @@ public class ImageCompressor : IImageCompressor
     }
 
     /// <summary>
+    /// 创建优化的PNG编码器
+    /// </summary>
+    /// <param name="image">图像对象</param>
+    /// <param name="compressionLevel">压缩级别（1-100）</param>
+    /// <param name="preserveMetadata">是否保留元数据</param>
+    /// <returns>优化的PNG编码器</returns>
+    private static PngEncoder CreateOptimizedPngEncoder(Image<Rgba32> image, int compressionLevel, bool preserveMetadata)
+    {
+        var pngCompressionLevel = GetPngCompressionLevel(compressionLevel);
+        
+        // 检测图像特征以选择最佳编码参数
+        var hasTransparency = ImageHasTransparency(image);
+        var colorCount = EstimateColorCount(image);
+        
+        // 对于所有情况都使用量化器来减小文件大小
+        // Wu量化器在保持质量的同时能显著减小文件大小
+        // 根据压缩级别调整颜色数量：压缩级别越高，颜色数量越少
+        var maxColors = compressionLevel <= 30 ? 256 : 
+                       compressionLevel <= 60 ? 128 : 
+                       compressionLevel <= 80 ? 64 : 32;
+        
+        var quantizer = new WuQuantizer(new QuantizerOptions
+        {
+            MaxColors = Math.Min(maxColors, colorCount <= 256 ? colorCount : maxColors)
+        });
+        
+        // 根据图像特征选择最佳的颜色类型和位深度
+        if (colorCount <= 256 && !hasTransparency)
+        {
+            // 颜色较少且无透明度，使用调色板模式
+            return new PngEncoder
+            {
+                CompressionLevel = pngCompressionLevel,
+                ChunkFilter = preserveMetadata ? null : PngChunkFilter.ExcludeAll,
+                ColorType = PngColorType.Palette,
+                BitDepth = colorCount <= 16 ? PngBitDepth.Bit4 : PngBitDepth.Bit8,
+                FilterMethod = PngFilterMethod.None, // 调色板图像使用None过滤器更好
+                Quantizer = quantizer
+            };
+        }
+        else if (colorCount <= 256 && hasTransparency)
+        {
+            // 颜色较少但有透明度，使用带透明度的调色板
+            return new PngEncoder
+            {
+                CompressionLevel = pngCompressionLevel,
+                ChunkFilter = preserveMetadata ? null : PngChunkFilter.ExcludeAll,
+                ColorType = PngColorType.Palette,
+                BitDepth = PngBitDepth.Bit8,
+                FilterMethod = PngFilterMethod.None,
+                Quantizer = quantizer
+            };
+        }
+        else
+        {
+            // 颜色丰富的图像，强制使用调色板模式和量化器来减小文件大小
+            // 这是解决ImageSharp PNG文件增大问题的关键
+            return new PngEncoder
+            {
+                CompressionLevel = pngCompressionLevel,
+                ChunkFilter = preserveMetadata ? null : PngChunkFilter.ExcludeAll,
+                ColorType = PngColorType.Palette,
+                BitDepth = PngBitDepth.Bit8,
+                FilterMethod = PngFilterMethod.None,
+                Quantizer = quantizer
+            };
+        }
+    }
+    
+    /// <summary>
+    /// 检测图像是否包含透明度
+    /// </summary>
+    /// <param name="image">图像对象</param>
+    /// <returns>是否包含透明度</returns>
+    private static bool ImageHasTransparency(Image<Rgba32> image)
+    {
+        // 简单采样检测透明度（检查部分像素以提高性能）
+        var sampleStep = Math.Max(1, Math.Max(image.Width, image.Height) / 100);
+        
+        for (int y = 0; y < image.Height; y += sampleStep)
+        {
+            for (int x = 0; x < image.Width; x += sampleStep)
+            {
+                if (image[x, y].A < 255)
+                {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /// <summary>
+    /// 估算图像的颜色数量
+    /// </summary>
+    /// <param name="image">图像对象</param>
+    /// <returns>估算的颜色数量</returns>
+    private static int EstimateColorCount(Image<Rgba32> image)
+    {
+        // 简单采样估算颜色数量（为了性能，不进行完整扫描）
+        var colorSet = new HashSet<uint>();
+        var sampleStep = Math.Max(1, Math.Max(image.Width, image.Height) / 50);
+        
+        for (int y = 0; y < image.Height; y += sampleStep)
+        {
+            for (int x = 0; x < image.Width; x += sampleStep)
+            {
+                var pixel = image[x, y];
+                var colorValue = (uint)(pixel.R << 24 | pixel.G << 16 | pixel.B << 8 | pixel.A);
+                colorSet.Add(colorValue);
+                
+                // 如果颜色数量已经超过256，就不需要继续检测了
+                if (colorSet.Count > 256)
+                {
+                    return 1000; // 返回一个大于256的值表示颜色丰富
+                }
+            }
+        }
+        
+        return colorSet.Count;
+    }
+
+    /// <summary>
     /// 将压缩级别转换为 PNG 压缩级别
     /// </summary>
     /// <param name="compressionLevel">压缩级别（1-100）</param>
@@ -200,8 +336,10 @@ public class ImageCompressor : IImageCompressor
     private static PngCompressionLevel GetPngCompressionLevel(int compressionLevel)
     {
         // 将 1-100 的范围映射到 PNG 的 1-9 压缩级别
-        // 数值越小压缩越强，所以需要反向映射
-        var level = 10 - (compressionLevel / 11);
+        // 我们的设计：数值越小压缩越强
+        // PNG的CompressionLevel：数值越大压缩越强
+        // 所以需要反向映射：1->9, 100->1
+        var level = 9 - ((compressionLevel - 1) * 8 / 99);
         level = Math.Max(1, Math.Min(9, level));
         
         return (PngCompressionLevel)level;

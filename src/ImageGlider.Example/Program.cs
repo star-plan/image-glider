@@ -1,5 +1,10 @@
 using ImageGlider;
 using ImageGlider.Enums;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Png;
+using ResizeMode = ImageGlider.Enums.ResizeMode;
 
 /// <summary>
 /// ImageGlider 示例程序，展示核心类库的典型用法
@@ -33,6 +38,11 @@ class Program
         // 示例4：批量尺寸调整
         Console.WriteLine("示例4：批量尺寸调整");
         BatchResizeExample();
+        Console.WriteLine();
+
+        // 创建测试PNG图片
+        Console.WriteLine("创建测试PNG图片");
+        CreateTestPngImage();
         Console.WriteLine();
 
         // 示例5：图像压缩优化
@@ -160,6 +170,46 @@ class Program
 
         Console.WriteLine($"日志已写入文件: {logger.LogFilePath}");
         Console.WriteLine("提示：日志同时输出到控制台和文件。");
+    }
+
+    /// <summary>
+    /// 创建测试PNG图片
+    /// </summary>
+    private static void CreateTestPngImage()
+    {
+        try
+        {
+            // 创建一个简单的小图片
+            using var image = new Image<Rgba32>(200, 200);
+            image.Mutate(x => x.BackgroundColor(Color.Red));
+            
+            var filePath = "test_image.png";
+            image.Save(filePath, new PngEncoder());
+            Console.WriteLine($"测试PNG图片已创建: {filePath}");
+            
+            var fileInfo = new FileInfo(filePath);
+            Console.WriteLine($"文件大小: {fileInfo.Length:N0} 字节");
+            
+            // 创建一个已经高度压缩的小PNG图片（用于测试文件大小检查）
+            using var smallImage = new Image<Rgba32>(10, 10);
+            smallImage.Mutate(x => x.BackgroundColor(Color.Blue));
+            
+            var smallFilePath = "small_test.png";
+            // 使用最高压缩级别保存
+            var encoder = new PngEncoder
+            {
+                CompressionLevel = SixLabors.ImageSharp.Formats.Png.PngCompressionLevel.BestCompression
+            };
+            smallImage.Save(smallFilePath, encoder);
+            
+            var smallFileInfo = new FileInfo(smallFilePath);
+            Console.WriteLine($"小测试图片已创建: {smallFilePath}");
+            Console.WriteLine($"小图片文件大小: {smallFileInfo.Length:N0} 字节");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"创建测试图片失败: {ex.Message}");
+        }
     }
 
     /// <summary>
