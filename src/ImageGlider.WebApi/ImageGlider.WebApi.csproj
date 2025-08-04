@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\ImageGlider\ImageGlider.csproj"/>
+        <ProjectReference Include="..\ImageGlider\ImageGlider.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
