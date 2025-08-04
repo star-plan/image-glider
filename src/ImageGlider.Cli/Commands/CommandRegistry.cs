@@ -128,7 +128,7 @@ namespace ImageGlider.Cli.Commands
             Console.WriteLine();
             Console.WriteLine("示例:");
             Console.WriteLine("  ImageGlider.Cli convert -s image.jfif -t image.jpeg -q 85");
-            Console.WriteLine("  ImageGlider.Cli batch -se .jfif -te .jpeg -q 90");
+            Console.WriteLine("  ImageGlider.Cli batch-convert -se .jfif -te .jpeg -q 90");
             Console.WriteLine("  ImageGlider.Cli resize -s input.jpg -t output.jpg -w 800 -h 600");
             Console.WriteLine("  ImageGlider.Cli compress -s input.jpg -t output.jpg -l 60");
             Console.WriteLine("  ImageGlider.Cli help convert");

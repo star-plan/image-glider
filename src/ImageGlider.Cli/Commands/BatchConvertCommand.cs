@@ -13,7 +13,7 @@ namespace ImageGlider.Cli.Commands
         /// <summary>
         /// 命令名称
         /// </summary>
-        public override string Name => "batch";
+        public override string Name => "batch-convert";
 
         /// <summary>
         /// 命令描述
@@ -120,7 +120,7 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli batch --source-ext <源扩展名> --target-ext <目标扩展名> [选项]");
+            Console.WriteLine("  ImageGlider.Cli batch-convert --source-ext <源扩展名> --target-ext <目标扩展名> [选项]");
             Console.WriteLine();
             Console.WriteLine("选项:");
             Console.WriteLine("  --source-ext, -se    源文件扩展名 (必需, 如: .jfif)");
@@ -131,7 +131,7 @@ namespace ImageGlider.Cli.Commands
             Console.WriteLine("  --log-dir, -ld       日志目录路径 (默认: ./log)");
             Console.WriteLine();
             Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli batch -se .jfif -te .jpeg -q 90");
+            Console.WriteLine("  ImageGlider.Cli batch-convert -se .jfif -te .jpeg -q 90");
         }
     }
 }
