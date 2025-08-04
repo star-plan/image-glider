@@ -94,6 +94,29 @@ namespace ImageGlider.Cli.Commands
         }
 
         /// <summary>
+        /// 解析浮点数参数
+        /// </summary>
+        /// <param name="args">参数数组</param>
+        /// <param name="index">当前索引</param>
+        /// <param name="paramName">参数名称</param>
+        /// <param name="min">最小值</param>
+        /// <param name="max">最大值</param>
+        /// <returns>参数值</returns>
+        protected float ParseFloatParameter(string[] args, ref int index, string paramName, float min = float.MinValue, float max = float.MaxValue)
+        {
+            var valueStr = ParseStringParameter(args, ref index, paramName);
+            if (!float.TryParse(valueStr, out float value))
+            {
+                throw new ArgumentException($"参数 {paramName} 必须是有效的浮点数");
+            }
+            if (value < min || value > max)
+            {
+                throw new ArgumentException($"参数 {paramName} 必须在 {min} 到 {max} 之间");
+            }
+            return value;
+        }
+
+        /// <summary>
         /// 验证必需参数
         /// </summary>
         /// <param name="value">参数值</param>

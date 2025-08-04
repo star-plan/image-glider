@@ -35,6 +35,15 @@ public static class ImageProcessorFactory
     }
 
     /// <summary>
+    /// 创建图像裁剪器实例
+    /// </summary>
+    /// <returns>图像裁剪器实例</returns>
+    public static IImageCropper CreateCropper()
+    {
+        return new ImageCropper();
+    }
+
+    /// <summary>
     /// 根据处理类型创建对应的处理器
     /// </summary>
     /// <param name="processorType">处理器类型</param>
@@ -47,6 +56,7 @@ public static class ImageProcessorFactory
             ImageProcessorType.FormatConverter => CreateFormatConverter(),
             ImageProcessorType.Resizer => CreateResizer(),
             ImageProcessorType.Compressor => CreateCompressor(),
+            ImageProcessorType.Cropper => CreateCropper(),
             _ => throw new ArgumentException($"不支持的处理器类型: {processorType}")
         };
     }
@@ -70,5 +80,10 @@ public enum ImageProcessorType
     /// <summary>
     /// 压缩优化器
     /// </summary>
-    Compressor
+    Compressor,
+
+    /// <summary>
+    /// 图像裁剪器
+    /// </summary>
+    Cropper
 }

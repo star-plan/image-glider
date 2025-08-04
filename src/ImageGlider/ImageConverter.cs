@@ -17,6 +17,7 @@ public class ImageConverter
     private static readonly IImageFormatConverter _formatConverter = ImageProcessorFactory.CreateFormatConverter();
     private static readonly IImageResizer _resizer = ImageProcessorFactory.CreateResizer();
     private static readonly IImageCompressor _compressor = ImageProcessorFactory.CreateCompressor();
+    private static readonly IImageCropper _cropper = ImageProcessorFactory.CreateCropper();
     /// <summary>
     /// 转换单个图片文件格式
     /// </summary>
@@ -116,6 +117,98 @@ public class ImageConverter
         bool preserveMetadata = false)
     {
         return _compressor.BatchCompress(sourceDirectory, outputDirectory, sourceExtension, compressionLevel, preserveMetadata);
+    }
+
+    /// <summary>
+    /// 裁剪单个图片文件
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="x">裁剪区域左上角X坐标（像素）</param>
+    /// <param name="y">裁剪区域左上角Y坐标（像素）</param>
+    /// <param name="width">裁剪区域宽度（像素）</param>
+    /// <param name="height">裁剪区域高度（像素）</param>
+    /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
+    /// <returns>裁剪是否成功</returns>
+    public static bool CropImage(string sourceFilePath, string targetFilePath, int x, int y, int width, int height, int quality = 90)
+    {
+        return _cropper.CropImage(sourceFilePath, targetFilePath, x, y, width, height, quality);
+    }
+
+    /// <summary>
+    /// 按百分比裁剪单个图片文件
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="xPercent">裁剪区域左上角X坐标百分比（0-100）</param>
+    /// <param name="yPercent">裁剪区域左上角Y坐标百分比（0-100）</param>
+    /// <param name="widthPercent">裁剪区域宽度百分比（0-100）</param>
+    /// <param name="heightPercent">裁剪区域高度百分比（0-100）</param>
+    /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
+    /// <returns>裁剪是否成功</returns>
+    public static bool CropImageByPercent(string sourceFilePath, string targetFilePath, float xPercent, float yPercent, float widthPercent, float heightPercent, int quality = 90)
+    {
+        return _cropper.CropImageByPercent(sourceFilePath, targetFilePath, xPercent, yPercent, widthPercent, heightPercent, quality);
+    }
+
+    /// <summary>
+    /// 中心裁剪单个图片文件
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="width">裁剪区域宽度（像素）</param>
+    /// <param name="height">裁剪区域高度（像素）</param>
+    /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
+    /// <returns>裁剪是否成功</returns>
+    public static bool CropImageCenter(string sourceFilePath, string targetFilePath, int width, int height, int quality = 90)
+    {
+        return _cropper.CropImageCenter(sourceFilePath, targetFilePath, width, height, quality);
+    }
+
+    /// <summary>
+    /// 批量裁剪指定目录下的图片文件
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名（如 .jpg）</param>
+    /// <param name="x">裁剪区域左上角X坐标（像素）</param>
+    /// <param name="y">裁剪区域左上角Y坐标（像素）</param>
+    /// <param name="width">裁剪区域宽度（像素）</param>
+    /// <param name="height">裁剪区域高度（像素）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>裁剪结果信息</returns>
+    public static ConversionResult BatchCrop(
+        string sourceDirectory,
+        string outputDirectory,
+        string sourceExtension,
+        int x,
+        int y,
+        int width,
+        int height,
+        int quality = 90)
+    {
+        return _cropper.BatchCrop(sourceDirectory, outputDirectory, sourceExtension, x, y, width, height, quality);
+    }
+
+    /// <summary>
+    /// 批量中心裁剪指定目录下的图片文件
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名（如 .jpg）</param>
+    /// <param name="width">裁剪区域宽度（像素）</param>
+    /// <param name="height">裁剪区域高度（像素）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>裁剪结果信息</returns>
+    public static ConversionResult BatchCropCenter(
+        string sourceDirectory,
+        string outputDirectory,
+        string sourceExtension,
+        int width,
+        int height,
+        int quality = 90)
+    {
+        return _cropper.BatchCropCenter(sourceDirectory, outputDirectory, sourceExtension, width, height, quality);
     }
 
 }
