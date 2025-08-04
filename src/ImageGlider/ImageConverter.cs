@@ -20,6 +20,7 @@ public class ImageConverter
     private static readonly IImageCompressor _compressor = ImageProcessorFactory.CreateCompressor();
     private static readonly IImageCropper _cropper = ImageProcessorFactory.CreateCropper();
     private static readonly IImageWatermark _watermark = ImageProcessorFactory.CreateWatermark();
+    private static readonly IImageMetadataStripper _metadataStripper = ImageProcessorFactory.CreateMetadataStripper();
     /// <summary>
     /// 转换单个图片文件格式
     /// </summary>
@@ -334,6 +335,50 @@ public class ImageConverter
         int quality = 90)
     {
         return _watermark.BatchAddImageWatermark(sourceDirectory, outputDirectory, sourceExtension, watermarkImagePath, position, opacity, scale, quality);
+    }
+
+    #endregion
+
+    #region 元数据清理功能
+
+    /// <summary>
+    /// 清理单个图片文件的元数据
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="stripAll">是否清理所有元数据（包括EXIF、ICC、XMP等）</param>
+    /// <param name="stripExif">是否清理EXIF数据</param>
+    /// <param name="stripIcc">是否清理ICC配置文件</param>
+    /// <param name="stripXmp">是否清理XMP数据</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>清理是否成功</returns>
+    public static bool StripMetadata(
+        string sourceFilePath,
+        string targetFilePath,
+        bool stripAll = true,
+        bool stripExif = true,
+        bool stripIcc = false,
+        bool stripXmp = true,
+        int quality = 90)
+    {
+        return _metadataStripper.StripMetadata(sourceFilePath, targetFilePath, stripAll, stripExif, stripIcc, stripXmp, quality);
+    }
+
+    /// <summary>
+    /// 批量清理指定目录下图片文件的元数据
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名</param>
+    /// <param name="stripAll">是否清理所有元数据（包括EXIF、ICC、XMP等）</param>
+    /// <param name="stripExif">是否清理EXIF数据</param>
+    /// <param name="stripIcc">是否清理ICC配置文件</param>
+    /// <param name="stripXmp">是否清理XMP数据</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>清理结果信息</returns>
+    public static BatchStripResult BatchStripMetadata(string sourceDirectory, string outputDirectory, string sourceExtension, bool stripAll = true, bool stripExif = true, bool stripIcc = false, bool stripXmp = true, int quality = 90)
+    {
+        return _metadataStripper.BatchStripMetadata(sourceDirectory, outputDirectory, sourceExtension, stripAll, stripExif, stripIcc, stripXmp, quality);
     }
 
     #endregion

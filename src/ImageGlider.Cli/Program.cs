@@ -38,6 +38,8 @@ class Program
         registry.RegisterCommand(new BatchThumbnailCommand());
         registry.RegisterCommand(new WatermarkCommand());
         registry.RegisterCommand(new BatchWatermarkCommand());
+        registry.RegisterCommand(new StripMetadataCommand());
+        registry.RegisterCommand(new BatchStripMetadataCommand());
         
         return registry;
     }

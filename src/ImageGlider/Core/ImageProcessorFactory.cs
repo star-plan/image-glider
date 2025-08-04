@@ -53,6 +53,15 @@ public static class ImageProcessorFactory
     }
 
     /// <summary>
+    /// 创建图像元数据清理器实例
+    /// </summary>
+    /// <returns>图像元数据清理器实例</returns>
+    public static IImageMetadataStripper CreateMetadataStripper()
+    {
+        return new ImageMetadataStripper();
+    }
+
+    /// <summary>
     /// 根据处理类型创建对应的处理器
     /// </summary>
     /// <param name="processorType">处理器类型</param>
@@ -67,6 +76,7 @@ public static class ImageProcessorFactory
             ImageProcessorType.Compressor => CreateCompressor(),
             ImageProcessorType.Cropper => CreateCropper(),
             ImageProcessorType.Watermark => CreateWatermark(),
+            ImageProcessorType.MetadataStripper => CreateMetadataStripper(),
             _ => throw new ArgumentException($"不支持的处理器类型: {processorType}")
         };
     }
@@ -100,5 +110,10 @@ public enum ImageProcessorType
     /// <summary>
     /// 图像水印处理器
     /// </summary>
-    Watermark
+    Watermark,
+
+    /// <summary>
+    /// 图像元数据清理器
+    /// </summary>
+    MetadataStripper
 }

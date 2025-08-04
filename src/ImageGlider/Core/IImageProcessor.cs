@@ -243,3 +243,36 @@ public interface IImageWatermark : IImageProcessor
     /// <returns>添加水印结果信息</returns>
     ConversionResult BatchAddImageWatermark(string sourceDirectory, string outputDirectory, string sourceExtension, string watermarkImagePath, WatermarkPosition position = WatermarkPosition.BottomRight, int opacity = 50, float scale = 1.0f, int quality = 90);
 }
+
+/// <summary>
+/// 图像元数据清理器接口
+/// </summary>
+public interface IImageMetadataStripper : IImageProcessor
+{
+    /// <summary>
+    /// 清理单个图片文件的元数据
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="stripAll">是否清理所有元数据（包括EXIF、ICC、XMP等）</param>
+    /// <param name="stripExif">是否清理EXIF数据</param>
+    /// <param name="stripIcc">是否清理ICC配置文件</param>
+    /// <param name="stripXmp">是否清理XMP数据</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>清理是否成功</returns>
+    bool StripMetadata(string sourceFilePath, string targetFilePath, bool stripAll = true, bool stripExif = true, bool stripIcc = false, bool stripXmp = true, int quality = 90);
+
+    /// <summary>
+    /// 批量清理指定目录下图片文件的元数据
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名</param>
+    /// <param name="stripAll">是否清理所有元数据（包括EXIF、ICC、XMP等）</param>
+    /// <param name="stripExif">是否清理EXIF数据</param>
+    /// <param name="stripIcc">是否清理ICC配置文件</param>
+    /// <param name="stripXmp">是否清理XMP数据</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>清理结果信息</returns>
+    BatchStripResult BatchStripMetadata(string sourceDirectory, string outputDirectory, string sourceExtension, bool stripAll = true, bool stripExif = true, bool stripIcc = false, bool stripXmp = true, int quality = 90);
+}
