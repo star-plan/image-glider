@@ -36,6 +36,8 @@ class Program
         registry.RegisterCommand(new BatchCropCommand());
         registry.RegisterCommand(new ThumbnailCommand());
         registry.RegisterCommand(new BatchThumbnailCommand());
+        registry.RegisterCommand(new WatermarkCommand());
+        registry.RegisterCommand(new BatchWatermarkCommand());
         
         return registry;
     }

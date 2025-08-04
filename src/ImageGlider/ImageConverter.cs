@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 using ImageGlider.Core;
 using ImageGlider.Enums;
+using static ImageGlider.Enums.WatermarkPosition;
 
 namespace ImageGlider;
 
@@ -18,6 +19,7 @@ public class ImageConverter
     private static readonly IImageResizer _resizer = ImageProcessorFactory.CreateResizer();
     private static readonly IImageCompressor _compressor = ImageProcessorFactory.CreateCompressor();
     private static readonly IImageCropper _cropper = ImageProcessorFactory.CreateCropper();
+    private static readonly IImageWatermark _watermark = ImageProcessorFactory.CreateWatermark();
     /// <summary>
     /// 转换单个图片文件格式
     /// </summary>
@@ -243,6 +245,95 @@ public class ImageConverter
         int quality = 90)
     {
         return _resizer.BatchGenerateThumbnails(sourceDirectory, outputDirectory, sourceExtension, maxSize, quality);
+    }
+
+    #endregion
+
+    #region 水印功能
+
+    /// <summary>
+    /// 添加文本水印到单个图片文件
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="text">水印文本</param>
+    /// <param name="position">水印位置</param>
+    /// <param name="opacity">透明度（0-100）</param>
+    /// <param name="fontSize">字体大小</param>
+    /// <param name="fontColor">字体颜色（十六进制，如 #FFFFFF）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>添加水印是否成功</returns>
+    public static bool AddTextWatermark(string sourceFilePath, string targetFilePath, string text, WatermarkPosition position = WatermarkPosition.BottomRight, int opacity = 50, int fontSize = 24, string fontColor = "#FFFFFF", int quality = 90)
+    {
+        return _watermark.AddTextWatermark(sourceFilePath, targetFilePath, text, position, opacity, fontSize, fontColor, quality);
+    }
+
+    /// <summary>
+    /// 添加图片水印到单个图片文件
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="watermarkImagePath">水印图片路径</param>
+    /// <param name="position">水印位置</param>
+    /// <param name="opacity">透明度（0-100）</param>
+    /// <param name="scale">缩放比例（0.1-2.0）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>添加水印是否成功</returns>
+    public static bool AddImageWatermark(string sourceFilePath, string targetFilePath, string watermarkImagePath, WatermarkPosition position = WatermarkPosition.BottomRight, int opacity = 50, float scale = 1.0f, int quality = 90)
+    {
+        return _watermark.AddImageWatermark(sourceFilePath, targetFilePath, watermarkImagePath, position, opacity, scale, quality);
+    }
+
+    /// <summary>
+    /// 批量添加文本水印到指定目录下的图片文件
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名</param>
+    /// <param name="text">水印文本</param>
+    /// <param name="position">水印位置</param>
+    /// <param name="opacity">透明度（0-100）</param>
+    /// <param name="fontSize">字体大小</param>
+    /// <param name="fontColor">字体颜色（十六进制，如 #FFFFFF）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>添加水印结果信息</returns>
+    public static ConversionResult BatchAddTextWatermark(
+        string sourceDirectory,
+        string outputDirectory,
+        string sourceExtension,
+        string text,
+        WatermarkPosition position = WatermarkPosition.BottomRight,
+        int opacity = 50,
+        int fontSize = 24,
+        string fontColor = "#FFFFFF",
+        int quality = 90)
+    {
+        return _watermark.BatchAddTextWatermark(sourceDirectory, outputDirectory, sourceExtension, text, position, opacity, fontSize, fontColor, quality);
+    }
+
+    /// <summary>
+    /// 批量添加图片水印到指定目录下的图片文件
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名</param>
+    /// <param name="watermarkImagePath">水印图片路径</param>
+    /// <param name="position">水印位置</param>
+    /// <param name="opacity">透明度（0-100）</param>
+    /// <param name="scale">缩放比例（0.1-2.0）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>添加水印结果信息</returns>
+    public static ConversionResult BatchAddImageWatermark(
+        string sourceDirectory,
+        string outputDirectory,
+        string sourceExtension,
+        string watermarkImagePath,
+        WatermarkPosition position = WatermarkPosition.BottomRight,
+        int opacity = 50,
+        float scale = 1.0f,
+        int quality = 90)
+    {
+        return _watermark.BatchAddImageWatermark(sourceDirectory, outputDirectory, sourceExtension, watermarkImagePath, position, opacity, scale, quality);
     }
 
     #endregion

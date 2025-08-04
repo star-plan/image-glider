@@ -44,6 +44,15 @@ public static class ImageProcessorFactory
     }
 
     /// <summary>
+    /// 创建图像水印处理器实例
+    /// </summary>
+    /// <returns>图像水印处理器实例</returns>
+    public static IImageWatermark CreateWatermark()
+    {
+        return new ImageWatermark();
+    }
+
+    /// <summary>
     /// 根据处理类型创建对应的处理器
     /// </summary>
     /// <param name="processorType">处理器类型</param>
@@ -57,6 +66,7 @@ public static class ImageProcessorFactory
             ImageProcessorType.Resizer => CreateResizer(),
             ImageProcessorType.Compressor => CreateCompressor(),
             ImageProcessorType.Cropper => CreateCropper(),
+            ImageProcessorType.Watermark => CreateWatermark(),
             _ => throw new ArgumentException($"不支持的处理器类型: {processorType}")
         };
     }
@@ -85,5 +95,10 @@ public enum ImageProcessorType
     /// <summary>
     /// 图像裁剪器
     /// </summary>
-    Cropper
+    Cropper,
+
+    /// <summary>
+    /// 图像水印处理器
+    /// </summary>
+    Watermark
 }
