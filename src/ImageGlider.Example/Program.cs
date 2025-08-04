@@ -1,4 +1,5 @@
 using ImageGlider;
+using ImageGlider.Enums;
 
 /// <summary>
 /// ImageGlider 示例程序，展示核心类库的典型用法

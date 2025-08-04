@@ -1,4 +1,5 @@
 using ImageGlider;
+using ImageGlider.Enums;
 
 /// <summary>
 /// ImageGlider 命令行工具入口点

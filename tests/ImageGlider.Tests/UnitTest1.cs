@@ -1,6 +1,7 @@
 using System.IO;
 using Xunit;
 using ImageGlider;
+using ImageGlider.Enums;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
@@ -176,7 +177,7 @@ public class ImageConverterResizeTests
             CreateTestImage(sourceFile, 200, 200);
 
             // Act
-            var result = ImageConverter.ResizeImage(sourceFile, targetFile, 100, 100, ResizeMode.Stretch);
+            var result = ImageConverter.ResizeImage(sourceFile, targetFile, 100, 100, ImageGlider.Enums.ResizeMode.Stretch);
 
             // Assert
             Assert.True(result);
@@ -212,7 +213,7 @@ public class ImageConverterResizeTests
             CreateTestImage(sourceFile, 400, 200); // 2:1 宽高比
 
             // Act - 目标尺寸 200x200，但应保持宽高比
-            var result = ImageConverter.ResizeImage(sourceFile, targetFile, 200, 200, ResizeMode.KeepAspectRatio);
+            var result = ImageConverter.ResizeImage(sourceFile, targetFile, 200, 200, ImageGlider.Enums.ResizeMode.KeepAspectRatio);
 
             // Assert
             Assert.True(result);
@@ -248,7 +249,7 @@ public class ImageConverterResizeTests
             CreateTestImage(sourceFile, 400, 200); // 2:1 宽高比
 
             // Act - 只指定宽度为 100
-            var result = ImageConverter.ResizeImage(sourceFile, targetFile, 100, null, ResizeMode.KeepAspectRatio);
+            var result = ImageConverter.ResizeImage(sourceFile, targetFile, 100, null, ImageGlider.Enums.ResizeMode.KeepAspectRatio);
 
             // Assert
             Assert.True(result);
@@ -341,7 +342,7 @@ public class ImageConverterResizeTests
             CreateTestImage(file2, 300, 300);
             
             // Act
-            var result = ImageConverter.BatchResize(tempDir, outputDir, ".jpg", 100, 100, ResizeMode.Stretch);
+            var result = ImageConverter.BatchResize(tempDir, outputDir, ".jpg", 100, 100, ImageGlider.Enums.ResizeMode.Stretch);
 
             // Assert
             Assert.True(result.IsSuccess);
