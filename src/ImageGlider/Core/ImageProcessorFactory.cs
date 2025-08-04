@@ -26,6 +26,15 @@ public static class ImageProcessorFactory
     }
 
     /// <summary>
+    /// 创建图像压缩器实例
+    /// </summary>
+    /// <returns>图像压缩器实例</returns>
+    public static IImageCompressor CreateCompressor()
+    {
+        return new ImageCompressor();
+    }
+
+    /// <summary>
     /// 根据处理类型创建对应的处理器
     /// </summary>
     /// <param name="processorType">处理器类型</param>
@@ -37,6 +46,7 @@ public static class ImageProcessorFactory
         {
             ImageProcessorType.FormatConverter => CreateFormatConverter(),
             ImageProcessorType.Resizer => CreateResizer(),
+            ImageProcessorType.Compressor => CreateCompressor(),
             _ => throw new ArgumentException($"不支持的处理器类型: {processorType}")
         };
     }
@@ -55,5 +65,10 @@ public enum ImageProcessorType
     /// <summary>
     /// 尺寸调整器
     /// </summary>
-    Resizer
+    Resizer,
+
+    /// <summary>
+    /// 压缩优化器
+    /// </summary>
+    Compressor
 }

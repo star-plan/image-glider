@@ -16,6 +16,7 @@ public class ImageConverter
 {
     private static readonly IImageFormatConverter _formatConverter = ImageProcessorFactory.CreateFormatConverter();
     private static readonly IImageResizer _resizer = ImageProcessorFactory.CreateResizer();
+    private static readonly IImageCompressor _compressor = ImageProcessorFactory.CreateCompressor();
     /// <summary>
     /// 转换单个图片文件格式
     /// </summary>
@@ -83,6 +84,38 @@ public class ImageConverter
         int quality = 90)
     {
         return _resizer.BatchResize(sourceDirectory, outputDirectory, sourceExtension, width, height, resizeMode, quality);
+    }
+
+    /// <summary>
+    /// 压缩优化单个图片文件
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="compressionLevel">压缩级别（1-100，数值越小压缩越强）</param>
+    /// <param name="preserveMetadata">是否保留元数据</param>
+    /// <returns>压缩是否成功</returns>
+    public static bool CompressImage(string sourceFilePath, string targetFilePath, int compressionLevel = 75, bool preserveMetadata = false)
+    {
+        return _compressor.CompressImage(sourceFilePath, targetFilePath, compressionLevel, preserveMetadata);
+    }
+
+    /// <summary>
+    /// 批量压缩优化指定目录下的图片文件
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名（如 .jpg）</param>
+    /// <param name="compressionLevel">压缩级别（1-100，数值越小压缩越强）</param>
+    /// <param name="preserveMetadata">是否保留元数据</param>
+    /// <returns>压缩结果信息</returns>
+    public static ConversionResult BatchCompress(
+        string sourceDirectory,
+        string outputDirectory,
+        string sourceExtension,
+        int compressionLevel = 75,
+        bool preserveMetadata = false)
+    {
+        return _compressor.BatchCompress(sourceDirectory, outputDirectory, sourceExtension, compressionLevel, preserveMetadata);
     }
 
 }

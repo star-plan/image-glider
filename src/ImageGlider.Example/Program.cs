@@ -35,8 +35,18 @@ class Program
         BatchResizeExample();
         Console.WriteLine();
 
-        // 示例5：使用日志服务
-        Console.WriteLine("示例5：使用日志服务");
+        // 示例5：图像压缩优化
+        Console.WriteLine("示例5：图像压缩优化");
+        CompressImageExample();
+        Console.WriteLine();
+
+        // 示例6：批量压缩优化
+        Console.WriteLine("示例6：批量压缩优化");
+        BatchCompressExample();
+        Console.WriteLine();
+
+        // 示例7：使用日志服务
+        Console.WriteLine("示例7：使用日志服务");
         LoggingServiceExample();
         Console.WriteLine();
 
@@ -236,6 +246,101 @@ class Program
         if (result.TotalFiles == 0)
         {
             Console.WriteLine("提示：请将 .jpeg 格式的图片文件放置在 example/input 目录下来测试批量尺寸调整功能。");
+        }
+    }
+
+    /// <summary>
+    /// 图像压缩优化示例
+    /// </summary>
+    private static void CompressImageExample()
+    {
+        // 创建示例目录
+        var exampleDir = Path.Combine(Directory.GetCurrentDirectory(), "example");
+        Directory.CreateDirectory(exampleDir);
+
+        var sourceFile = Path.Combine(exampleDir, "sample.jpg");
+        var targetFile = Path.Combine(exampleDir, "sample_compressed.jpg");
+
+        Console.WriteLine($"源文件: {sourceFile}");
+        Console.WriteLine($"目标文件: {targetFile}");
+
+        // 检查源文件是否存在
+        if (!File.Exists(sourceFile))
+        {
+            Console.WriteLine("源文件不存在，跳过压缩示例。");
+            Console.WriteLine("提示：请将图片文件放置在 example 目录下并命名为 sample.jpg 来测试压缩功能。");
+            return;
+        }
+
+        // 执行压缩（压缩级别60，不保留元数据）
+        bool success = ImageConverter.CompressImage(
+            sourceFilePath: sourceFile,
+            targetFilePath: targetFile,
+            compressionLevel: 60,
+            preserveMetadata: false
+        );
+        
+        if (success)
+        {
+            Console.WriteLine("✓ 压缩成功！");
+            
+            // 显示文件大小对比
+            if (File.Exists(sourceFile) && File.Exists(targetFile))
+            {
+                var originalSize = new FileInfo(sourceFile).Length;
+                var compressedSize = new FileInfo(targetFile).Length;
+                var compressionRatio = (1.0 - (double)compressedSize / originalSize) * 100;
+                
+                Console.WriteLine($"原始文件大小: {originalSize:N0} 字节");
+                Console.WriteLine($"压缩后大小: {compressedSize:N0} 字节");
+                Console.WriteLine($"压缩率: {compressionRatio:F1}%");
+            }
+        }
+        else
+        {
+            Console.WriteLine("✗ 压缩失败！");
+        }
+    }
+
+    /// <summary>
+    /// 批量压缩优化示例
+    /// </summary>
+    private static void BatchCompressExample()
+    {
+        // 创建示例目录结构
+        var exampleDir = Path.Combine(Directory.GetCurrentDirectory(), "example");
+        var inputDir = Path.Combine(exampleDir, "input");
+        var outputDir = Path.Combine(exampleDir, "compressed_output");
+        
+        Directory.CreateDirectory(inputDir);
+        Directory.CreateDirectory(outputDir);
+
+        Console.WriteLine($"源目录: {inputDir}");
+        Console.WriteLine($"输出目录: {outputDir}");
+        Console.WriteLine("压缩规则: .jpg 文件压缩级别50，保留元数据");
+
+        // 执行批量压缩
+        var result = ImageConverter.BatchCompress(
+            sourceDirectory: inputDir,
+            outputDirectory: outputDir,
+            sourceExtension: ".jpg",
+            compressionLevel: 50,
+            preserveMetadata: true
+        );
+
+        // 显示压缩结果
+        Console.WriteLine($"总文件数: {result.TotalFiles}");
+        Console.WriteLine($"成功压缩: {result.SuccessfulConversions}");
+        Console.WriteLine($"压缩失败: {result.FailedConversions}");
+        
+        if (!string.IsNullOrEmpty(result.ErrorMessage))
+        {
+            Console.WriteLine($"错误信息: {result.ErrorMessage}");
+        }
+
+        if (result.TotalFiles == 0)
+        {
+            Console.WriteLine("提示：请将 .jpg 格式的图片文件放置在 example/input 目录下来测试批量压缩功能。");
         }
     }
 }

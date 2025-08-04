@@ -37,6 +37,12 @@ class Program
             case "batch-resize":
                 HandleBatchResizeCommand(args);
                 break;
+            case "compress":
+                HandleCompressCommand(args);
+                break;
+            case "batch-compress":
+                HandleBatchCompressCommand(args);
+                break;
             case "help":
             case "--help":
             case "-h":
@@ -59,12 +65,16 @@ class Program
         Console.WriteLine("  ImageGlider.Cli batch --source-ext <源扩展名> --target-ext <目标扩展名> [选项]");
         Console.WriteLine("  ImageGlider.Cli resize --source <源文件> --target <目标文件> [选项]");
         Console.WriteLine("  ImageGlider.Cli batch-resize --source-ext <源扩展名> [选项]");
+        Console.WriteLine("  ImageGlider.Cli compress --source <源文件> --target <目标文件> [选项]");
+        Console.WriteLine("  ImageGlider.Cli batch-compress --source-ext <源扩展名> [选项]");
         Console.WriteLine();
         Console.WriteLine("命令:");
         Console.WriteLine("  convert       转换单个图片文件");
         Console.WriteLine("  batch         批量转换图片文件");
         Console.WriteLine("  resize        调整单个图片文件尺寸");
         Console.WriteLine("  batch-resize  批量调整图片文件尺寸");
+        Console.WriteLine("  compress      压缩优化单个图片文件");
+        Console.WriteLine("  batch-compress 批量压缩优化图片文件");
         Console.WriteLine();
         Console.WriteLine("convert 选项:");
         Console.WriteLine("  --source, -s     源文件路径 (必需)");
@@ -97,11 +107,27 @@ class Program
         Console.WriteLine("  --quality, -q        JPEG 质量 (1-100, 默认: 90)");
         Console.WriteLine("  --log-dir, -ld       日志目录路径 (默认: ./log)");
         Console.WriteLine();
+        Console.WriteLine("compress 选项:");
+        Console.WriteLine("  --source, -s         源文件路径 (必需)");
+        Console.WriteLine("  --target, -t         目标文件路径 (必需)");
+        Console.WriteLine("  --level, -l          压缩级别 (1-100, 数值越小压缩越强, 默认: 75)");
+        Console.WriteLine("  --preserve-meta, -pm 保留元数据 (默认: false)");
+        Console.WriteLine();
+        Console.WriteLine("batch-compress 选项:");
+        Console.WriteLine("  --source-ext, -se    源文件扩展名 (必需, 如: .jpg)");
+        Console.WriteLine("  --source-dir, -sd    源目录路径 (默认: 当前目录)");
+        Console.WriteLine("  --output-dir, -od    输出目录路径 (默认: ./output)");
+        Console.WriteLine("  --level, -l          压缩级别 (1-100, 数值越小压缩越强, 默认: 75)");
+        Console.WriteLine("  --preserve-meta, -pm 保留元数据 (默认: false)");
+        Console.WriteLine("  --log-dir, -ld       日志目录路径 (默认: ./log)");
+        Console.WriteLine();
         Console.WriteLine("示例:");
         Console.WriteLine("  ImageGlider.Cli convert -s image.jfif -t image.jpeg -q 85");
         Console.WriteLine("  ImageGlider.Cli batch -se .jfif -te .jpeg -q 90");
         Console.WriteLine("  ImageGlider.Cli resize -s input.jpg -t output.jpg -w 800 -h 600 --mode keep");
         Console.WriteLine("  ImageGlider.Cli batch-resize -se .jpg -w 1920 --mode keep");
+        Console.WriteLine("  ImageGlider.Cli compress -s input.jpg -t output.jpg -l 60");
+        Console.WriteLine("  ImageGlider.Cli batch-compress -se .jpg -l 50 --preserve-meta");
     }
 
     /// <summary>
@@ -478,6 +504,156 @@ class Program
         }
 
         Console.WriteLine($"\n尺寸调整完成！请查看输出目录: {outputDir}");
+        Console.WriteLine($"日志文件: {logger.LogFilePath}");
+    }
+
+    /// <summary>
+    /// 处理单文件压缩命令
+    /// </summary>
+    /// <param name="args">命令行参数</param>
+    private static void HandleCompressCommand(string[] args)
+    {
+        string? sourceFile = null;
+        string? targetFile = null;
+        int compressionLevel = 75;
+        bool preserveMetadata = false;
+
+        // 解析参数
+        for (int i = 1; i < args.Length; i++)
+        {
+            switch (args[i].ToLowerInvariant())
+            {
+                case "--source":
+                case "-s":
+                    if (i + 1 < args.Length)
+                        sourceFile = args[++i];
+                    break;
+                case "--target":
+                case "-t":
+                    if (i + 1 < args.Length)
+                        targetFile = args[++i];
+                    break;
+                case "--level":
+                case "-l":
+                    if (i + 1 < args.Length && int.TryParse(args[++i], out int level))
+                        compressionLevel = Math.Clamp(level, 1, 100);
+                    break;
+                case "--preserve-meta":
+                case "-pm":
+                    preserveMetadata = true;
+                    break;
+            }
+        }
+
+        // 验证必需参数
+        if (string.IsNullOrEmpty(sourceFile) || string.IsNullOrEmpty(targetFile))
+        {
+            Console.WriteLine("错误: 缺少必需参数 --source 和 --target");
+            ShowHelp();
+            return;
+        }
+
+        Console.WriteLine($"正在压缩: {sourceFile} -> {targetFile}");
+        Console.WriteLine($"压缩级别: {compressionLevel}");
+        Console.WriteLine($"保留元数据: {preserveMetadata}");
+
+        var success = ImageConverter.CompressImage(sourceFile, targetFile, compressionLevel, preserveMetadata);
+
+        if (success)
+        {
+            Console.WriteLine("压缩完成！");
+        }
+        else
+        {
+            Console.WriteLine("压缩失败！请检查源文件是否存在以及目标路径是否有效。");
+            Environment.Exit(1);
+        }
+    }
+
+    /// <summary>
+    /// 处理批量压缩命令
+    /// </summary>
+    /// <param name="args">命令行参数</param>
+    private static void HandleBatchCompressCommand(string[] args)
+    {
+        string? sourceExt = null;
+        string sourceDir = Directory.GetCurrentDirectory();
+        string outputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
+        string logDir = Path.Combine(Directory.GetCurrentDirectory(), "log");
+        int compressionLevel = 75;
+        bool preserveMetadata = false;
+
+        // 解析参数
+        for (int i = 1; i < args.Length; i++)
+        {
+            switch (args[i].ToLowerInvariant())
+            {
+                case "--source-ext":
+                case "-se":
+                    if (i + 1 < args.Length)
+                        sourceExt = args[++i];
+                    break;
+                case "--source-dir":
+                case "-sd":
+                    if (i + 1 < args.Length)
+                        sourceDir = args[++i];
+                    break;
+                case "--output-dir":
+                case "-od":
+                    if (i + 1 < args.Length)
+                        outputDir = args[++i];
+                    break;
+                case "--log-dir":
+                case "-ld":
+                    if (i + 1 < args.Length)
+                        logDir = args[++i];
+                    break;
+                case "--level":
+                case "-l":
+                    if (i + 1 < args.Length && int.TryParse(args[++i], out int level))
+                        compressionLevel = Math.Clamp(level, 1, 100);
+                    break;
+                case "--preserve-meta":
+                case "-pm":
+                    preserveMetadata = true;
+                    break;
+            }
+        }
+
+        // 验证必需参数
+        if (string.IsNullOrEmpty(sourceExt))
+        {
+            Console.WriteLine("错误: 缺少必需参数 --source-ext");
+            ShowHelp();
+            return;
+        }
+
+        using var logger = new LoggingService(logDir);
+        
+        logger.Log("开始批量压缩...");
+        logger.Log($"源目录: {sourceDir}");
+        logger.Log($"输出目录: {outputDir}");
+        logger.Log($"源扩展名: {sourceExt}");
+        logger.Log($"压缩级别: {compressionLevel}");
+        logger.Log($"保留元数据: {preserveMetadata}");
+
+        var result = ImageConverter.BatchCompress(sourceDir, outputDir, sourceExt, compressionLevel, preserveMetadata);
+
+        if (!string.IsNullOrEmpty(result.ErrorMessage))
+        {
+            logger.LogError($"批量压缩失败: {result.ErrorMessage}");
+            Console.WriteLine($"批量压缩失败: {result.ErrorMessage}");
+            Environment.Exit(1);
+            return;
+        }
+
+        logger.Log($"压缩完成！成功: {result.SuccessfulConversions}, 失败: {result.FailedConversions}");
+        Console.WriteLine($"\n压缩完成！请查看输出目录: {outputDir}");
+        Console.WriteLine($"成功压缩: {result.SuccessfulConversions} 个文件");
+        if (result.FailedConversions > 0)
+        {
+            Console.WriteLine($"压缩失败: {result.FailedConversions} 个文件");
+        }
         Console.WriteLine($"日志文件: {logger.LogFilePath}");
     }
 }
