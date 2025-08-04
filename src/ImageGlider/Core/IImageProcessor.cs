@@ -276,3 +276,38 @@ public interface IImageMetadataStripper : IImageProcessor
     /// <returns>清理结果信息</returns>
     BatchStripResult BatchStripMetadata(string sourceDirectory, string outputDirectory, string sourceExtension, bool stripAll = true, bool stripExif = true, bool stripIcc = false, bool stripXmp = true, int quality = 90);
 }
+
+/// <summary>
+/// 图像颜色调整器接口
+/// </summary>
+public interface IImageColorAdjuster : IImageProcessor
+{
+    /// <summary>
+    /// 调整单个图片文件的颜色
+    /// </summary>
+    /// <param name="sourceFilePath">源文件路径</param>
+    /// <param name="targetFilePath">目标文件路径</param>
+    /// <param name="brightness">亮度调整（-100到100，0为不调整）</param>
+    /// <param name="contrast">对比度调整（-100到100，0为不调整）</param>
+    /// <param name="saturation">饱和度调整（-100到100，0为不调整）</param>
+    /// <param name="hue">色相调整（-180到180，0为不调整）</param>
+    /// <param name="gamma">伽马值调整（0.1到3.0，1.0为不调整）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>调整是否成功</returns>
+    bool AdjustColor(string sourceFilePath, string targetFilePath, float brightness = 0, float contrast = 0, float saturation = 0, float hue = 0, float gamma = 1.0f, int quality = 90);
+
+    /// <summary>
+    /// 批量调整指定目录下图片文件的颜色
+    /// </summary>
+    /// <param name="sourceDirectory">源目录</param>
+    /// <param name="outputDirectory">输出目录</param>
+    /// <param name="sourceExtension">源文件扩展名</param>
+    /// <param name="brightness">亮度调整（-100到100，0为不调整）</param>
+    /// <param name="contrast">对比度调整（-100到100，0为不调整）</param>
+    /// <param name="saturation">饱和度调整（-100到100，0为不调整）</param>
+    /// <param name="hue">色相调整（-180到180，0为不调整）</param>
+    /// <param name="gamma">伽马值调整（0.1到3.0，1.0为不调整）</param>
+    /// <param name="quality">JPEG 质量</param>
+    /// <returns>调整结果信息</returns>
+    ConversionResult BatchAdjustColor(string sourceDirectory, string outputDirectory, string sourceExtension, float brightness = 0, float contrast = 0, float saturation = 0, float hue = 0, float gamma = 1.0f, int quality = 90);
+}
