@@ -143,25 +143,30 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli batch-resize --source-ext <源扩展名> [选项]");
-            Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source-ext, -se    源文件扩展名 (必需, 如: .jpg)");
-            Console.WriteLine("  --source-dir, -sd    源目录路径 (默认: 当前目录)");
-            Console.WriteLine("  --output-dir, -od    输出目录路径 (默认: ./output)");
-            Console.WriteLine("  --width, -w          目标宽度 (像素)");
-            Console.WriteLine("  --height, -h         目标高度 (像素)");
-            Console.WriteLine("  --mode, -m           调整模式 (keep|stretch|crop, 默认: keep)");
-            Console.WriteLine("  --quality, -q        JPEG 质量 (1-100, 默认: 90)");
-            Console.WriteLine("  --log-dir, -ld       日志目录路径 (默认: ./log)");
-            Console.WriteLine();
-            Console.WriteLine("调整模式说明:");
-            Console.WriteLine("  keep     保持宽高比，可能会有空白区域");
-            Console.WriteLine("  stretch  拉伸到指定尺寸，可能会变形");
-            Console.WriteLine("  crop     裁剪到指定尺寸，保持宽高比");
-            Console.WriteLine();
-            Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli batch-resize -se .jpg -w 1920 --mode keep");
+            Console.WriteLine("  imageglider batch-resize --source-ext <源扩展名> [选项]");
+        Console.WriteLine();
+        Console.WriteLine("参数:");
+        Console.WriteLine("  -se, --source-ext <扩展名>  源文件扩展名 (如 .jpg，必需)");
+        Console.WriteLine("  -te, --target-ext <扩展名>  目标文件扩展名 (如 .png，默认: 与源相同)");
+        Console.WriteLine("  -sd, --source-dir <目录>    源目录路径 (默认: 当前目录)");
+        Console.WriteLine("  -td, --target-dir <目录>    目标目录路径 (默认: 源目录)");
+        Console.WriteLine("  -w, --width <像素>          目标宽度");
+        Console.WriteLine("  -h, --height <像素>         目标高度");
+        Console.WriteLine("  --mode <模式>               调整模式 (keep|fill|crop|stretch，默认: keep)");
+        Console.WriteLine("  --bg-color <颜色>           背景颜色 (十六进制，如 #FFFFFF，默认: 透明)");
+        Console.WriteLine("  -p, --pattern <模式>        文件名匹配模式 (如 *.jpg，默认: *源扩展名)");
+        Console.WriteLine("  -r, --recursive             递归处理子目录");
+        Console.WriteLine("  --quality <质量>            JPEG 质量 (1-100，默认: 85)");
+        Console.WriteLine("  --help                      显示此帮助信息");
+        Console.WriteLine();
+        Console.WriteLine("调整模式说明:");
+        Console.WriteLine("  keep    - 保持宽高比，可能有留白");
+        Console.WriteLine("  fill    - 保持宽高比，裁剪多余部分");
+        Console.WriteLine("  crop    - 保持宽高比，居中裁剪");
+        Console.WriteLine("  stretch - 拉伸到指定尺寸，可能变形");
+        Console.WriteLine();
+        Console.WriteLine("示例:");
+        Console.WriteLine("  imageglider batch-resize -se .jpg -w 1920 --mode keep");
         }
     }
 }

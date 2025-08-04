@@ -107,23 +107,23 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli resize --source <源文件> --target <目标文件> [选项]");
-            Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source, -s     源文件路径 (必需)");
-            Console.WriteLine("  --target, -t     目标文件路径 (必需)");
-            Console.WriteLine("  --width, -w      目标宽度 (像素)");
-            Console.WriteLine("  --height, -h     目标高度 (像素)");
-            Console.WriteLine("  --mode, -m       调整模式 (keep|stretch|crop, 默认: keep)");
-            Console.WriteLine("  --quality, -q    JPEG 质量 (1-100, 默认: 90)");
-            Console.WriteLine();
-            Console.WriteLine("调整模式说明:");
-            Console.WriteLine("  keep     保持宽高比，可能会有空白区域");
-            Console.WriteLine("  stretch  拉伸到指定尺寸，可能会变形");
-            Console.WriteLine("  crop     裁剪到指定尺寸，保持宽高比");
-            Console.WriteLine();
-            Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli resize -s input.jpg -t output.jpg -w 800 -h 600 --mode keep");
+            Console.WriteLine("  imageglider resize --source <源文件> --target <目标文件> [选项]");
+        Console.WriteLine();
+        Console.WriteLine("选项:");
+        Console.WriteLine("  --source, -s     源文件路径 (必需)");
+        Console.WriteLine("  --target, -t     目标文件路径 (必需)");
+        Console.WriteLine("  --width, -w      目标宽度 (像素)");
+        Console.WriteLine("  --height, -h     目标高度 (像素)");
+        Console.WriteLine("  --mode, -m       调整模式 (keep|stretch|crop, 默认: keep)");
+        Console.WriteLine("  --quality, -q    JPEG 质量 (1-100, 默认: 90)");
+        Console.WriteLine();
+        Console.WriteLine("调整模式说明:");
+        Console.WriteLine("  keep     保持宽高比，可能会有空白区域");
+        Console.WriteLine("  stretch  拉伸到指定尺寸，可能会变形");
+        Console.WriteLine("  crop     裁剪到指定尺寸，保持宽高比");
+        Console.WriteLine();
+        Console.WriteLine("示例:");
+        Console.WriteLine("  imageglider resize -s input.jpg -t output.jpg -w 800 -h 600 --mode keep");
         }
     }
 }

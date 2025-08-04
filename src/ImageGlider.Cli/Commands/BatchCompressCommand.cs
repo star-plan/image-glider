@@ -124,23 +124,23 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli batch-compress --source-ext <源扩展名> [选项]");
-            Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source-ext, -se    源文件扩展名 (必需, 如: .jpg)");
-            Console.WriteLine("  --source-dir, -sd    源目录路径 (默认: 当前目录)");
-            Console.WriteLine("  --output-dir, -od    输出目录路径 (默认: ./output)");
-            Console.WriteLine("  --level, -l          压缩级别 (1-100, 数值越小压缩越强, 默认: 75)");
-            Console.WriteLine("  --preserve-meta, -pm 保留元数据 (默认: false)");
-            Console.WriteLine("  --log-dir, -ld       日志目录路径 (默认: ./log)");
-            Console.WriteLine();
-            Console.WriteLine("压缩级别说明:");
-            Console.WriteLine("  1-30     高压缩率，文件较小，质量较低");
-            Console.WriteLine("  31-70    中等压缩率，平衡文件大小和质量");
-            Console.WriteLine("  71-100   低压缩率，文件较大，质量较高");
-            Console.WriteLine();
-            Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli batch-compress -se .jpg -l 50 --preserve-meta");
+            Console.WriteLine("  imageglider batch-compress --source-ext <源扩展名> [选项]");
+        Console.WriteLine();
+        Console.WriteLine("选项:");
+        Console.WriteLine("  --source-ext, -se    源文件扩展名 (必需, 如: .jpg)");
+        Console.WriteLine("  --source-dir, -sd    源目录路径 (默认: 当前目录)");
+        Console.WriteLine("  --output-dir, -od    输出目录路径 (默认: ./output)");
+        Console.WriteLine("  --level, -l          压缩级别 (1-100, 数值越小压缩越强, 默认: 75)");
+        Console.WriteLine("  --preserve-meta, -pm 保留元数据 (默认: false)");
+        Console.WriteLine("  --log-dir, -ld       日志目录路径 (默认: ./log)");
+        Console.WriteLine();
+        Console.WriteLine("压缩级别说明:");
+        Console.WriteLine("  1-30     高压缩率，文件较小，质量较低");
+        Console.WriteLine("  31-70    中等压缩率，平衡文件大小和质量");
+        Console.WriteLine("  71-100   低压缩率，文件较大，质量较高");
+        Console.WriteLine();
+        Console.WriteLine("示例:");
+        Console.WriteLine("  imageglider batch-compress -se .jpg -l 50 --preserve-meta");
         }
     }
 }

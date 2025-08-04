@@ -150,7 +150,7 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli strip-metadata --source <源文件> --target <目标文件> [选项]");
+            Console.WriteLine("  imageglider strip-metadata --source <源文件> --target <目标文件> [选项]");
             Console.WriteLine();
             Console.WriteLine("必需参数:");
             Console.WriteLine("  --source, -s     源文件路径");
@@ -174,10 +174,10 @@ namespace ImageGlider.Cli.Commands
             Console.WriteLine("  默认清理所有元数据，但保留 ICC 配置文件以保持颜色准确性");
             Console.WriteLine();
             Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli strip-metadata -s photo.jpg -t clean_photo.jpg");
-            Console.WriteLine("  ImageGlider.Cli strip-metadata -s image.png -t output.png --all");
-            Console.WriteLine("  ImageGlider.Cli strip-metadata -s input.jpg -t output.jpg --exif --xmp");
-            Console.WriteLine("  ImageGlider.Cli strip-metadata -s photo.jpg -t clean.jpg --all --no-icc");
+            Console.WriteLine("  imageglider strip-metadata -s photo.jpg -t clean_photo.jpg");
+            Console.WriteLine("  imageglider strip-metadata -s image.png -t output.png --all");
+            Console.WriteLine("  imageglider strip-metadata -s input.jpg -t output.jpg --exif --xmp");
+            Console.WriteLine("  imageglider strip-metadata -s photo.jpg -t clean.jpg --all --no-icc");
         }
     }
 }

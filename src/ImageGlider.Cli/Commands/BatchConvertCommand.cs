@@ -120,18 +120,20 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli batch-convert --source-ext <源扩展名> --target-ext <目标扩展名> [选项]");
-            Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source-ext, -se    源文件扩展名 (必需, 如: .jfif)");
-            Console.WriteLine("  --target-ext, -te    目标文件扩展名 (必需, 如: .jpeg)");
-            Console.WriteLine("  --source-dir, -sd    源目录路径 (默认: 当前目录)");
-            Console.WriteLine("  --output-dir, -od    输出目录路径 (默认: ./output)");
-            Console.WriteLine("  --quality, -q        JPEG 质量 (1-100, 默认: 90)");
-            Console.WriteLine("  --log-dir, -ld       日志目录路径 (默认: ./log)");
-            Console.WriteLine();
-            Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli batch-convert -se .jfif -te .jpeg -q 90");
+            Console.WriteLine("  imageglider batch-convert --source-ext <源扩展名> --target-ext <目标扩展名> [选项]");
+        Console.WriteLine();
+        Console.WriteLine("参数:");
+        Console.WriteLine("  -se, --source-ext <扩展名>  源文件扩展名 (如 .jfif，必需)");
+        Console.WriteLine("  -te, --target-ext <扩展名>  目标文件扩展名 (如 .jpeg，必需)");
+        Console.WriteLine("  -sd, --source-dir <目录>    源目录路径 (默认: 当前目录)");
+        Console.WriteLine("  -td, --target-dir <目录>    目标目录路径 (默认: 源目录)");
+        Console.WriteLine("  -q, --quality <质量>        JPEG 质量 (1-100，默认: 85)");
+        Console.WriteLine("  -p, --pattern <模式>        文件名匹配模式 (如 *.jfif，默认: *源扩展名)");
+        Console.WriteLine("  -r, --recursive             递归处理子目录");
+        Console.WriteLine("  --help                      显示此帮助信息");
+        Console.WriteLine();
+        Console.WriteLine("示例:");
+        Console.WriteLine("  imageglider batch-convert -se .jfif -te .jpeg -q 90");
         }
     }
 }

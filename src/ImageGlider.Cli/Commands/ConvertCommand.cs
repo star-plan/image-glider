@@ -77,15 +77,16 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli convert --source <源文件> --target <目标文件> [--quality <质量>]");
-            Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source, -s     源文件路径 (必需)");
-            Console.WriteLine("  --target, -t     目标文件路径 (必需)");
-            Console.WriteLine("  --quality, -q    JPEG 质量 (1-100, 默认: 90)");
-            Console.WriteLine();
-            Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli convert -s image.jfif -t image.jpeg -q 85");
+            Console.WriteLine("  imageglider convert --source <源文件> --target <目标文件> [--quality <质量>]");
+        Console.WriteLine();
+        Console.WriteLine("参数:");
+        Console.WriteLine("  -s, --source <文件>     源图片文件路径 (必需)");
+        Console.WriteLine("  -t, --target <文件>     目标图片文件路径 (必需)");
+        Console.WriteLine("  -q, --quality <质量>    JPEG 质量 (1-100，默认: 85)");
+        Console.WriteLine("  --help                  显示此帮助信息");
+        Console.WriteLine();
+        Console.WriteLine("示例:");
+        Console.WriteLine("  imageglider convert -s image.jfif -t image.jpeg -q 85");
         }
     }
 }

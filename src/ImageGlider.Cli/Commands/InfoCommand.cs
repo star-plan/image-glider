@@ -97,15 +97,15 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli info --source <图片文件> [--json]");
+            Console.WriteLine("  imageglider info --source <图片文件> [--json]");
             Console.WriteLine();
             Console.WriteLine("参数:");
             Console.WriteLine("  --source, -s    要分析的图片文件路径");
             Console.WriteLine("  --json, -j      以JSON格式输出结果");
             Console.WriteLine();
             Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli info -s photo.jpg");
-            Console.WriteLine("  ImageGlider.Cli info -s photo.jpg --json");
+            Console.WriteLine("  imageglider info -s photo.jpg");
+            Console.WriteLine("  imageglider info -s photo.jpg --json");
             Console.WriteLine();
             Console.WriteLine("支持的格式:");
             Console.WriteLine("  JPEG, PNG, GIF, BMP, TIFF, WebP");

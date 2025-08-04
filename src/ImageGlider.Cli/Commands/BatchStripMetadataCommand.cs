@@ -183,7 +183,7 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli batch-strip-metadata [选项]");
+            Console.WriteLine("  imageglider batch-strip-metadata [选项]");
             Console.WriteLine();
             Console.WriteLine("选项:");
             Console.WriteLine("  --source-dir, -sd    源目录路径 (默认: 当前目录)");
@@ -207,10 +207,10 @@ namespace ImageGlider.Cli.Commands
             Console.WriteLine("  默认清理所有元数据，但保留 ICC 配置文件以保持颜色准确性");
             Console.WriteLine();
             Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli batch-strip-metadata -sd ./photos -od ./cleaned");
-            Console.WriteLine("  ImageGlider.Cli batch-strip-metadata -sd C:\\Images -od C:\\CleanImages -ext .png");
-            Console.WriteLine("  ImageGlider.Cli batch-strip-metadata -sd ./input -od ./output --all");
-            Console.WriteLine("  ImageGlider.Cli batch-strip-metadata -sd ./photos --exif --xmp --no-icc");
+            Console.WriteLine("  imageglider batch-strip-metadata -sd ./photos -od ./cleaned");
+            Console.WriteLine("  imageglider batch-strip-metadata -sd C:\\Images -od C:\\CleanImages -ext .png");
+            Console.WriteLine("  imageglider batch-strip-metadata -sd ./input -od ./output --all");
+            Console.WriteLine("  imageglider batch-strip-metadata -sd ./photos --exif --xmp --no-icc");
         }
     }
 }

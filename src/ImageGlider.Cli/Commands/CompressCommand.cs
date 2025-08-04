@@ -83,22 +83,23 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli compress --source <源文件> --target <目标文件> [选项]");
-            Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source, -s         源文件路径 (必需)");
-            Console.WriteLine("  --target, -t         目标文件路径 (必需)");
-            Console.WriteLine("  --level, -l          压缩级别 (1-100, 数值越小压缩越强, 默认: 75)");
-            Console.WriteLine("  --preserve-meta, -pm 保留元数据 (默认: false)");
-            Console.WriteLine();
-            Console.WriteLine("压缩级别说明:");
-            Console.WriteLine("  1-30     高压缩率，文件较小，质量较低");
-            Console.WriteLine("  31-70    中等压缩率，平衡文件大小和质量");
-            Console.WriteLine("  71-100   低压缩率，文件较大，质量较高");
-            Console.WriteLine();
-            Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli compress -s input.jpg -t output.jpg -l 60");
-            Console.WriteLine("  ImageGlider.Cli compress -s input.jpg -t output.jpg -l 50 --preserve-meta");
+            Console.WriteLine("  imageglider compress --source <源文件> --target <目标文件> [选项]");
+        Console.WriteLine();
+        Console.WriteLine("参数:");
+        Console.WriteLine("  -s, --source <文件>     源图片文件路径 (必需)");
+        Console.WriteLine("  -t, --target <文件>     目标图片文件路径 (必需)");
+        Console.WriteLine("  -l, --level <级别>      压缩级别 (1-100，默认: 75)");
+        Console.WriteLine("  --preserve-meta         保留元数据");
+        Console.WriteLine("  --help                  显示此帮助信息");
+        Console.WriteLine();
+        Console.WriteLine("说明:");
+        Console.WriteLine("  - 压缩级别越低，文件越小，质量越差");
+        Console.WriteLine("  - 默认会移除 EXIF 等元数据以减小文件大小");
+        Console.WriteLine("  - 使用 --preserve-meta 保留原始元数据");
+        Console.WriteLine();
+        Console.WriteLine("示例:");
+        Console.WriteLine("  imageglider compress -s input.jpg -t output.jpg -l 60");
+        Console.WriteLine("  imageglider compress -s input.jpg -t output.jpg -l 50 --preserve-meta");
         }
     }
 }

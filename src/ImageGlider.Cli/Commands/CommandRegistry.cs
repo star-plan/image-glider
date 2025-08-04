@@ -112,8 +112,8 @@ namespace ImageGlider.Cli.Commands
         public void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli <命令> [选项]");
-            Console.WriteLine("  ImageGlider.Cli help [命令]    显示帮助信息");
+            Console.WriteLine("  imageglider <命令> [选项]");
+            Console.WriteLine("  imageglider help [命令]    显示帮助信息");
             Console.WriteLine();
             Console.WriteLine("可用命令:");
 
@@ -124,14 +124,14 @@ namespace ImageGlider.Cli.Commands
             }
 
             Console.WriteLine();
-            Console.WriteLine("使用 'ImageGlider.Cli help <命令>' 查看特定命令的详细帮助。");
+            Console.WriteLine("使用 'imageglider help <命令>' 查看特定命令的详细帮助。");
             Console.WriteLine();
             Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli convert -s image.jfif -t image.jpeg -q 85");
-            Console.WriteLine("  ImageGlider.Cli batch-convert -se .jfif -te .jpeg -q 90");
-            Console.WriteLine("  ImageGlider.Cli resize -s input.jpg -t output.jpg -w 800 -h 600");
-            Console.WriteLine("  ImageGlider.Cli compress -s input.jpg -t output.jpg -l 60");
-            Console.WriteLine("  ImageGlider.Cli help convert");
+            Console.WriteLine("  imageglider convert -s image.jfif -t image.jpeg -q 85");
+            Console.WriteLine("  imageglider batch-convert -se .jfif -te .jpeg -q 90");
+            Console.WriteLine("  imageglider resize -s input.jpg -t output.jpg -w 800 -h 600");
+            Console.WriteLine("  imageglider compress -s input.jpg -t output.jpg -l 60");
+            Console.WriteLine("  imageglider help convert");
         }
     }
 }

@@ -118,23 +118,25 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli batch-thumbnail [选项]");
-            Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source-dir, -sd    源目录路径 (默认: 当前目录)");
-            Console.WriteLine("  --output-dir, -od    输出目录路径 (默认: ./thumbnails)");
-            Console.WriteLine("  --extension, -ext    源文件扩展名 (默认: .jpg)");
-            Console.WriteLine("  --size, -sz          缩略图最大边长 (像素, 默认: 150)");
-            Console.WriteLine("  --quality, -q        JPEG 质量 (1-100, 默认: 90)");
-            Console.WriteLine();
-            Console.WriteLine("说明:");
-            Console.WriteLine("  批量处理指定目录下的所有匹配文件");
-            Console.WriteLine("  生成的缩略图文件名会添加 '_thumb' 后缀");
-            Console.WriteLine("  缩略图会按照长边等比缩放，保持原始图片的宽高比");
-            Console.WriteLine();
-            Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli batch-thumbnail -sd ./photos -od ./thumbs -ext .png --size 200");
-            Console.WriteLine("  ImageGlider.Cli batch-thumbnail -sd C:\\Images -od C:\\Thumbnails -ext .jpg -sz 100");
+            Console.WriteLine("  imageglider batch-thumbnail [选项]");
+        Console.WriteLine();
+        Console.WriteLine("参数:");
+        Console.WriteLine("  -sd, --source-dir <目录>    源目录路径 (默认: 当前目录)");
+        Console.WriteLine("  -od, --output-dir <目录>    输出目录路径 (默认: ./thumbnails)");
+        Console.WriteLine("  -ext, --extension <扩展名>  处理的文件扩展名 (如 .jpg，默认: 所有支持的格式)");
+        Console.WriteLine("  -p, --pattern <模式>        文件名匹配模式 (如 *.jpg，默认: *.*)");
+        Console.WriteLine("  -r, --recursive             递归处理子目录");
+        Console.WriteLine("  --size <尺寸>               缩略图尺寸 (像素，默认: 150)");
+        Console.WriteLine("  -q, --quality <质量>        JPEG 质量 (1-100，默认: 85)");
+        Console.WriteLine("  --help                      显示此帮助信息");
+        Console.WriteLine();
+        Console.WriteLine("说明:");
+        Console.WriteLine("  - 生成正方形缩略图，保持宽高比");
+        Console.WriteLine("  - 自动裁剪到指定尺寸的正方形");
+        Console.WriteLine();
+        Console.WriteLine("示例:");
+        Console.WriteLine("  imageglider batch-thumbnail -sd ./photos -od ./thumbs -ext .png --size 200");
+        Console.WriteLine("  imageglider batch-thumbnail -sd C:\\Images -od C:\\Thumbnails -ext .jpg -sz 100");
         }
     }
 }

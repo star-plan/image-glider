@@ -84,22 +84,22 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli thumbnail --source <源文件> --target <目标文件> [选项]");
+            Console.WriteLine("  imageglider thumbnail --source <源文件> --target <目标文件> [选项]");
             Console.WriteLine();
-            Console.WriteLine("选项:");
-            Console.WriteLine("  --source, -s       源文件路径 (必需)");
-            Console.WriteLine("  --target, -t       目标文件路径 (必需)");
-            Console.WriteLine("  --size, -sz        缩略图最大边长 (像素, 默认: 150)");
-            Console.WriteLine("  --quality, -q      JPEG 质量 (1-100, 默认: 90)");
+            Console.WriteLine("参数:");
+            Console.WriteLine("  -s, --source <文件>     源图片文件路径 (必需)");
+            Console.WriteLine("  -t, --target <文件>     目标图片文件路径 (必需)");
+            Console.WriteLine("  --size <尺寸>           缩略图尺寸 (像素，默认: 150)");
+            Console.WriteLine("  -q, --quality <质量>    JPEG 质量 (1-100，默认: 85)");
+            Console.WriteLine("  --help                  显示此帮助信息");
             Console.WriteLine();
             Console.WriteLine("说明:");
-            Console.WriteLine("  缩略图会按照长边等比缩放，保持原始图片的宽高比");
-            Console.WriteLine("  如果原图宽度大于高度，则宽度缩放到指定尺寸");
-            Console.WriteLine("  如果原图高度大于宽度，则高度缩放到指定尺寸");
+            Console.WriteLine("  - 生成正方形缩略图，保持宽高比");
+            Console.WriteLine("  - 自动裁剪到指定尺寸的正方形");
             Console.WriteLine();
             Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli thumbnail -s input.jpg -t thumb.jpg --size 200");
-            Console.WriteLine("  ImageGlider.Cli thumbnail -s photo.png -t thumbnail.png -sz 100 -q 85");
+            Console.WriteLine("  imageglider thumbnail -s input.jpg -t thumb.jpg --size 200");
+            Console.WriteLine("  imageglider thumbnail -s photo.png -t thumbnail.png -sz 100 -q 85");
         }
     }
 }

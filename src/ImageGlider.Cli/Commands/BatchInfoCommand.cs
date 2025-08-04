@@ -203,7 +203,7 @@ namespace ImageGlider.Cli.Commands
         public override void ShowHelp()
         {
             Console.WriteLine("用法:");
-            Console.WriteLine("  ImageGlider.Cli batch-info --source-dir <目录> [选项]");
+            Console.WriteLine("  imageglider batch-info --source-dir <目录> [选项]");
             Console.WriteLine();
             Console.WriteLine("参数:");
             Console.WriteLine("  --source-dir, -sd    要扫描的目录路径");
@@ -213,10 +213,10 @@ namespace ImageGlider.Cli.Commands
             Console.WriteLine("  --output, -o         输出文件路径（可选）");
             Console.WriteLine();
             Console.WriteLine("示例:");
-            Console.WriteLine("  ImageGlider.Cli batch-info -sd ./photos");
-            Console.WriteLine("  ImageGlider.Cli batch-info -sd ./photos -p *.jpg -r");
-            Console.WriteLine("  ImageGlider.Cli batch-info -sd ./photos --json -o report.json");
-            Console.WriteLine("  ImageGlider.Cli batch-info -sd ./photos -o report.txt");
+            Console.WriteLine("  imageglider batch-info -sd ./photos");
+            Console.WriteLine("  imageglider batch-info -sd ./photos -p *.jpg -r");
+            Console.WriteLine("  imageglider batch-info -sd ./photos --json -o report.json");
+            Console.WriteLine("  imageglider batch-info -sd ./photos -o report.txt");
             Console.WriteLine();
             Console.WriteLine("支持的格式:");
             Console.WriteLine("  JPEG, PNG, GIF, BMP, TIFF, WebP");
