@@ -24,8 +24,18 @@ class Program
         BatchConversionExample();
         Console.WriteLine();
 
-        // 示例3：使用日志服务
-        Console.WriteLine("示例3：使用日志服务");
+        // 示例3：图像尺寸调整
+        Console.WriteLine("示例3：图像尺寸调整");
+        ResizeImageExample();
+        Console.WriteLine();
+
+        // 示例4：批量尺寸调整
+        Console.WriteLine("示例4：批量尺寸调整");
+        BatchResizeExample();
+        Console.WriteLine();
+
+        // 示例5：使用日志服务
+        Console.WriteLine("示例5：使用日志服务");
         LoggingServiceExample();
         Console.WriteLine();
 
@@ -139,5 +149,92 @@ class Program
 
         Console.WriteLine($"日志已写入文件: {logger.LogFilePath}");
         Console.WriteLine("提示：日志同时输出到控制台和文件。");
+    }
+
+    /// <summary>
+    /// 图像尺寸调整示例
+    /// </summary>
+    private static void ResizeImageExample()
+    {
+        // 创建示例目录
+        var exampleDir = Path.Combine(Directory.GetCurrentDirectory(), "example");
+        Directory.CreateDirectory(exampleDir);
+
+        var sourceFile = Path.Combine(exampleDir, "sample.jpeg");
+        var resizedFile = Path.Combine(exampleDir, "sample_resized.jpeg");
+
+        Console.WriteLine($"源文件: {sourceFile}");
+        Console.WriteLine($"调整后文件: {resizedFile}");
+        Console.WriteLine("目标尺寸: 800x600 (保持宽高比)");
+
+        // 检查源文件是否存在
+        if (!File.Exists(sourceFile))
+        {
+            Console.WriteLine("源文件不存在，跳过尺寸调整示例。");
+            Console.WriteLine("提示：请将图片文件放置在 example 目录下并命名为 sample.jpeg 来测试尺寸调整功能。");
+            return;
+        }
+
+        // 执行尺寸调整
+        bool success = ImageConverter.ResizeImage(
+            sourceFile, 
+            resizedFile, 
+            width: 800, 
+            height: 600, 
+            resizeMode: ResizeMode.KeepAspectRatio, 
+            quality: 90
+        );
+        
+        if (success)
+        {
+            Console.WriteLine("✓ 尺寸调整成功！");
+        }
+        else
+        {
+            Console.WriteLine("✗ 尺寸调整失败！");
+        }
+    }
+
+    /// <summary>
+    /// 批量尺寸调整示例
+    /// </summary>
+    private static void BatchResizeExample()
+    {
+        var sourceDir = Path.Combine(Directory.GetCurrentDirectory(), "example", "input");
+        var outputDir = Path.Combine(Directory.GetCurrentDirectory(), "example", "resized");
+        
+        // 创建示例目录
+        Directory.CreateDirectory(sourceDir);
+        Directory.CreateDirectory(outputDir);
+
+        Console.WriteLine($"源目录: {sourceDir}");
+        Console.WriteLine($"输出目录: {outputDir}");
+        Console.WriteLine("调整规则: .jpeg 文件调整为 1024x768 (保持宽高比)");
+
+        // 执行批量尺寸调整
+        var result = ImageConverter.BatchResize(
+            sourceDirectory: sourceDir,
+            outputDirectory: outputDir,
+            sourceExtension: ".jpeg",
+            width: 1024,
+            height: 768,
+            resizeMode: ResizeMode.KeepAspectRatio,
+            quality: 85
+        );
+
+        // 显示调整结果
+        Console.WriteLine($"总文件数: {result.TotalFiles}");
+        Console.WriteLine($"成功调整: {result.SuccessfulConversions}");
+        Console.WriteLine($"调整失败: {result.FailedConversions}");
+        
+        if (!string.IsNullOrEmpty(result.ErrorMessage))
+        {
+            Console.WriteLine($"错误信息: {result.ErrorMessage}");
+        }
+
+        if (result.TotalFiles == 0)
+        {
+            Console.WriteLine("提示：请将 .jpeg 格式的图片文件放置在 example/input 目录下来测试批量尺寸调整功能。");
+        }
     }
 }
