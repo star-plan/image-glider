@@ -42,6 +42,8 @@ class Program
         registry.RegisterCommand(new BatchStripMetadataCommand());
         registry.RegisterCommand(new AdjustColorCommand());
         registry.RegisterCommand(new BatchAdjustColorCommand());
+        registry.RegisterCommand(new InfoCommand());
+        registry.RegisterCommand(new BatchInfoCommand());
         
         return registry;
     }

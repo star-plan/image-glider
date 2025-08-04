@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Processing;
 using ImageGlider.Core;
 using ImageGlider.Enums;
 using static ImageGlider.Enums.WatermarkPosition;
+using ImageInfo = ImageGlider.Core.ImageInfo;
 
 namespace ImageGlider;
 
@@ -22,6 +23,7 @@ public class ImageConverter
     private static readonly IImageWatermark _watermark = ImageProcessorFactory.CreateWatermark();
     private static readonly IImageMetadataStripper _metadataStripper = ImageProcessorFactory.CreateMetadataStripper();
     private static readonly IImageColorAdjuster _colorAdjuster = ImageProcessorFactory.CreateColorAdjuster();
+    private static readonly IImageInfoExtractor _infoExtractor = ImageProcessorFactory.CreateInfoExtractor();
     /// <summary>
     /// 转换单个图片文件格式
     /// </summary>
@@ -436,6 +438,32 @@ public class ImageConverter
         int quality = 90)
     {
         return _colorAdjuster.BatchAdjustColor(sourceDirectory, outputDirectory, sourceExtension, brightness, contrast, saturation, hue, gamma, quality);
+    }
+
+    #endregion
+
+    #region 图像信息提取
+
+    /// <summary>
+    /// 提取单个图片文件的信息
+    /// </summary>
+    /// <param name="filePath">图片文件路径</param>
+    /// <returns>图片信息对象</returns>
+    public static ImageInfo GetImageInfo(string filePath)
+    {
+        return _infoExtractor.ExtractImageInfo(filePath);
+    }
+
+    /// <summary>
+    /// 批量提取指定目录下的图片信息
+    /// </summary>
+    /// <param name="directory">目录路径</param>
+    /// <param name="searchPattern">搜索模式（如 "*.jpg"）</param>
+    /// <param name="recursive">是否递归搜索子目录</param>
+    /// <returns>图片信息列表</returns>
+    public static List<ImageInfo> BatchGetImageInfo(string directory, string searchPattern = "*.*", bool recursive = false)
+    {
+        return _infoExtractor.BatchExtractImageInfo(directory, searchPattern, recursive);
     }
 
     #endregion

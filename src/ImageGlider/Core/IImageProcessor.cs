@@ -311,3 +311,25 @@ public interface IImageColorAdjuster : IImageProcessor
     /// <returns>调整结果信息</returns>
     ConversionResult BatchAdjustColor(string sourceDirectory, string outputDirectory, string sourceExtension, float brightness = 0, float contrast = 0, float saturation = 0, float hue = 0, float gamma = 1.0f, int quality = 90);
 }
+
+/// <summary>
+/// 图像信息提取器接口
+/// </summary>
+public interface IImageInfoExtractor : IImageProcessor
+{
+    /// <summary>
+    /// 提取单个图片文件的信息
+    /// </summary>
+    /// <param name="filePath">图片文件路径</param>
+    /// <returns>图片信息对象</returns>
+    ImageInfo ExtractImageInfo(string filePath);
+
+    /// <summary>
+    /// 批量提取指定目录下的图片信息
+    /// </summary>
+    /// <param name="directory">目录路径</param>
+    /// <param name="searchPattern">搜索模式（如 "*.jpg"）</param>
+    /// <param name="recursive">是否递归搜索子目录</param>
+    /// <returns>图片信息列表</returns>
+    List<ImageInfo> BatchExtractImageInfo(string directory, string searchPattern = "*.*", bool recursive = false);
+}

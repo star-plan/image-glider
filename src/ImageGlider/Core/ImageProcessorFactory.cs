@@ -71,6 +71,15 @@ public static class ImageProcessorFactory
     }
 
     /// <summary>
+    /// 创建图像信息提取器实例
+    /// </summary>
+    /// <returns>图像信息提取器实例</returns>
+    public static IImageInfoExtractor CreateInfoExtractor()
+    {
+        return new ImageInfoExtractor();
+    }
+
+    /// <summary>
     /// 根据处理类型创建对应的处理器
     /// </summary>
     /// <param name="processorType">处理器类型</param>
@@ -87,6 +96,7 @@ public static class ImageProcessorFactory
             ImageProcessorType.Watermark => CreateWatermark(),
             ImageProcessorType.MetadataStripper => CreateMetadataStripper(),
             ImageProcessorType.ColorAdjuster => CreateColorAdjuster(),
+            ImageProcessorType.InfoExtractor => CreateInfoExtractor(),
             _ => throw new ArgumentException($"不支持的处理器类型: {processorType}")
         };
     }
@@ -130,5 +140,10 @@ public enum ImageProcessorType
     /// <summary>
     /// 图像颜色调整器
     /// </summary>
-    ColorAdjuster
+    ColorAdjuster,
+
+    /// <summary>
+    /// 图像信息提取器
+    /// </summary>
+    InfoExtractor
 }
