@@ -127,4 +127,115 @@ public static class TestImageHelper
             }
         }
     }
+
+    /// <summary>
+    /// 创建一个非常小的测试图像
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    /// <returns>创建的文件路径</returns>
+    public static string CreateTinyTestImage(string? filePath = null)
+    {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            filePath = Path.GetTempFileName() + ".jpg";
+        }
+
+        CreateTestImage(filePath, 1, 1, Color.White);
+        return filePath;
+    }
+
+    /// <summary>
+    /// 创建一个大尺寸的测试图像
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    /// <param name="width">宽度，默认2000</param>
+    /// <param name="height">高度，默认2000</param>
+    /// <returns>创建的文件路径</returns>
+    public static string CreateLargeTestImage(string? filePath = null, int width = 2000, int height = 2000)
+    {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            filePath = Path.GetTempFileName() + ".jpg";
+        }
+
+        CreateTestImage(filePath, width, height, Color.Green);
+        return filePath;
+    }
+
+    /// <summary>
+    /// 创建一个损坏的图像文件（实际上是文本文件）
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    /// <returns>创建的文件路径</returns>
+    public static string CreateCorruptImageFile(string? filePath = null)
+    {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            filePath = Path.GetTempFileName() + ".jpg";
+        }
+
+        var directory = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllText(filePath, "This is not a valid image file content");
+        return filePath;
+    }
+
+    /// <summary>
+    /// 验证文件是否为有效的图像文件
+    /// </summary>
+    /// <param name="imagePath">图像文件路径</param>
+    /// <returns>是否为有效图像</returns>
+    public static bool IsValidImageFile(string imagePath)
+    {
+        if (!File.Exists(imagePath))
+            return false;
+
+        try
+        {
+            using var image = Image.Load(imagePath);
+            return image.Width > 0 && image.Height > 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 获取图像文件的大小信息
+    /// </summary>
+    /// <param name="imagePath">图像文件路径</param>
+    /// <returns>图像尺寸，如果无效则返回(0,0)</returns>
+    public static (int Width, int Height) GetImageSize(string imagePath)
+    {
+        if (!File.Exists(imagePath))
+            return (0, 0);
+
+        try
+        {
+            using var image = Image.Load(imagePath);
+            return (image.Width, image.Height);
+        }
+        catch
+        {
+            return (0, 0);
+        }
+    }
+
+    /// <summary>
+    /// 比较两个图像文件的尺寸是否相同
+    /// </summary>
+    /// <param name="imagePath1">第一个图像路径</param>
+    /// <param name="imagePath2">第二个图像路径</param>
+    /// <returns>尺寸是否相同</returns>
+    public static bool CompareImageSizes(string imagePath1, string imagePath2)
+    {
+        var size1 = GetImageSize(imagePath1);
+        var size2 = GetImageSize(imagePath2);
+        return size1.Width == size2.Width && size1.Height == size2.Height;
+    }
 }
