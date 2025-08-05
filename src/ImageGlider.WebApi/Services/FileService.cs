@@ -8,7 +8,7 @@ public class FileService:IFileService
     /// <param name="file">文件</param>
     /// <param name="fileExt">文件扩展名</param>
     /// <returns>(原文件路径, 输出路径)</returns>
-    public async Task<(string, string)> SaveUploadedFile(IFormFile file, string fileExt)
+    public async Task<(string, string)> SaveUploadedFile(IFormFile file, string? fileExt)
     {
         var tempDir = GetRootDirectory();
         var tempFilePath = Path.Combine(tempDir, $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}");
@@ -17,7 +17,11 @@ public class FileService:IFileService
         await file.CopyToAsync(stream);
         
         // 生成输出路径
-        var outName = $"{Guid.NewGuid()}.{fileExt}";
+        var extension = !string.IsNullOrEmpty(fileExt) 
+            ? fileExt.StartsWith(".") ? fileExt : $".{fileExt}" 
+            : Path.GetExtension(file.FileName);
+
+        var outName = $"{Guid.NewGuid()}{extension}";
         var outputPath = Path.Combine(GetRootDirectory("output"), outName);
         
         return (tempFilePath, outputPath);
