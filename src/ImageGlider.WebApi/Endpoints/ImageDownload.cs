@@ -9,7 +9,7 @@ public class ImageDownload : IEndpoint
     {
         var group = app.MapGroup("/api/downloads");
         // 下载转换后的图片文件格式，并返回文件流
-        group.MapPost("/{fileName}", DownloadFile);
+        group.MapGet("/{fileName}", DownloadFile);
     }
 
     [Tags("下载图片")]

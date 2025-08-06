@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+:root {
+  --el-color-primary: #3b82f6;
+  --el-color-primary-light-3: #93c5fd;
+  --el-color-primary-light-5: #bfdbfe;
+  --el-color-primary-light-7: #dbeafe;
+  --el-color-primary-light-8: #eff6ff;
+  --el-color-primary-light-9: #f8fafc;
+  --el-color-primary-dark-2: #2563eb;
+}
+
+.dark {
+  --el-color-primary: #60a5fa;
+  --el-bg-color: #1f2937;
+  --el-bg-color-page: #111827;
+  --el-text-color-primary: #f9fafb;
+  --el-text-color-regular: #e5e7eb;
+  --el-border-color: #374151;
+  --el-border-color-light: #4b5563;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Image preview styles */
+.image-preview {
+  @apply border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center;
+}
+
+.image-preview.dragover {
+  @apply border-blue-500 bg-blue-50 dark:bg-blue-900/20;
+}
+
+/* Card hover effects */
+.feature-card {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}
