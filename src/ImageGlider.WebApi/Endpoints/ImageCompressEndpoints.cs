@@ -33,6 +33,17 @@ public class ImageCompressEndpoints : IEndpoint
             });
         }
 
+        // 验证压缩级别参数
+        if (request.CompressionLevel <= 0 || request.CompressionLevel > 100)
+        {
+            return Results.BadRequest(new ApiResponse
+            {
+                StatusCode = 400,
+                Successful = false,
+                Message = "压缩级别参数无效，必须在1-100之间"
+            });
+        }
+
         try
         {
             var originalExtension = Path.GetExtension(request.file.FileName);
@@ -51,7 +62,7 @@ public class ImageCompressEndpoints : IEndpoint
                 fileService.DeleteFile(tempFilePath);
                 return Results.Json(new ApiResponse
                 {
-                    Message = "图片压缩成功",
+                    Message = "压缩成功",
                     Data = fileService.GetFileName(outputPath)
                 });
             }
@@ -63,7 +74,7 @@ public class ImageCompressEndpoints : IEndpoint
                 {
                     StatusCode = 400,
                     Successful = false,
-                    Message = "图片压缩失败"
+                    Message = "压缩失败"
                 });
             }
         }

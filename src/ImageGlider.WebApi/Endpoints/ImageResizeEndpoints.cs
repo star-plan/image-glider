@@ -37,6 +37,37 @@ public class ImageResizeEndpoints : IEndpoint
             });
         }
 
+        // 验证尺寸参数
+        if (request.Width.HasValue && (request.Width <= 0 || request.Width > 8000))
+        {
+            return Results.BadRequest(new ApiResponse
+            {
+                StatusCode = 400,
+                Successful = false,
+                Message = "宽度参数无效，必须在1-8000像素之间"
+            });
+        }
+
+        if (request.Height.HasValue && (request.Height <= 0 || request.Height > 8000))
+        {
+            return Results.BadRequest(new ApiResponse
+            {
+                StatusCode = 400,
+                Successful = false,
+                Message = "高度参数无效，必须在1-8000像素之间"
+            });
+        }
+
+        if (!request.Width.HasValue && !request.Height.HasValue)
+        {
+            return Results.BadRequest(new ApiResponse
+            {
+                StatusCode = 400,
+                Successful = false,
+                Message = "宽度和高度至少需要指定一个"
+            });
+        }
+
         try
         {
             var originalExtension = Path.GetExtension(request.file.FileName);

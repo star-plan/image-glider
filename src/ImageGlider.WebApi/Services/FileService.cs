@@ -1,4 +1,4 @@
-﻿namespace ImageGlider.WebApi.Services;
+namespace ImageGlider.WebApi.Services;
 
 public class FileService:IFileService
 {
@@ -56,6 +56,9 @@ public class FileService:IFileService
     // 文件格式验证
     public bool IsFileValid(IFormFile file)
     {
+        if (file == null || string.IsNullOrEmpty(file.FileName))
+            return false;
+            
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp" }; // 支持的图片格式
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
         return file.Length is > 0 and < 10 * 1024 * 1024 && // 10MB
@@ -86,8 +89,8 @@ public class FileService:IFileService
             ".gif" => "image/gif",
             ".bmp" => "image/bmp",
             ".tiff" => "image/tiff",
-            ".webp" => "image/.webp",
-            _ => throw new ArgumentException("不支持的图片格式")
+            ".webp" => "image/webp",
+            _ => "application/octet-stream"
         };
     }
 }

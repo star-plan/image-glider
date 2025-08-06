@@ -12,6 +12,12 @@ public sealed class GlobalExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken)
     {
+        if (exception == null)
+        {
+            logger.LogWarning("TryHandleAsync called with null exception");
+            return false;
+        }
+
         logger.LogError(exception, "An unhandled exception occurred.");
 
         httpContext.Response.StatusCode = exception switch

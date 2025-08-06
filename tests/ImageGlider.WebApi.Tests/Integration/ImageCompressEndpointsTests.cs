@@ -22,7 +22,7 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var testFile = WebTestHelper.CreateLargeTestFormFile("large_test.jpg", 1000, 1000);
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = "60",
+            ["CompressionLevel"] = "60",
             ["MaxFileSize"] = "500000" // 500KB
         };
         
@@ -53,7 +53,7 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var invalidFile = WebTestHelper.CreateInvalidTestFile("document.txt");
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = "60",
+            ["CompressionLevel"] = "60",
             ["MaxFileSize"] = "500000"
         };
         
@@ -86,7 +86,7 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var testFile = WebTestHelper.CreateTestFormFile("test.jpg", 200, 200);
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = quality.ToString(),
+            ["CompressionLevel"] = quality.ToString(),
             ["MaxFileSize"] = "500000"
         };
         
@@ -123,7 +123,7 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var testFile = WebTestHelper.CreateTestFormFile($"test.{format}", 300, 300);
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = "70",
+            ["CompressionLevel"] = "70",
             ["MaxFileSize"] = "1000000"
         };
         
@@ -143,8 +143,8 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var testFile = WebTestHelper.CreateTestFormFile("test.jpg", 400, 400);
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = "95", // 高质量
-            ["MaxFileSize"] = "2000000"
+            ["CompressionLevel"] = "95", // 高质量
+            ["PreserveMetadata"] = "false"
         };
         
         var content = CreateMultipartContent(testFile, additionalFields);
@@ -163,8 +163,8 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var testFile = WebTestHelper.CreateTestFormFile("test.jpg", 400, 400);
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = "30", // 低质量
-            ["MaxFileSize"] = "100000"
+            ["CompressionLevel"] = "30", // 低质量
+            ["PreserveMetadata"] = "false"
         };
         
         var content = CreateMultipartContent(testFile, additionalFields);
@@ -183,7 +183,7 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var testFile = WebTestHelper.CreateTestFormFile("test.jpg", 200, 200);
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = "50",
+            ["CompressionLevel"] = "50",
             ["MaxFileSize"] = "1000" // 很小的文件大小限制
         };
         
@@ -204,7 +204,7 @@ public class ImageCompressEndpointsTests : WebApiTestBase
         var testFile = WebTestHelper.CreateLargeTestFormFile("large_test.jpg", 2000, 1500);
         var additionalFields = new Dictionary<string, string>
         {
-            ["Quality"] = "75",
+            ["CompressionLevel"] = "75",
             ["MaxFileSize"] = "1000000" // 1MB
         };
         
@@ -228,7 +228,7 @@ public class ImageCompressEndpointsTests : WebApiTestBase
             var testFile = WebTestHelper.CreateTestFormFile($"test_{i}.jpg", 300, 300);
             var additionalFields = new Dictionary<string, string>
             {
-                ["Quality"] = "70",
+                ["CompressionLevel"] = "70",
                 ["MaxFileSize"] = "500000"
             };
             

@@ -61,7 +61,8 @@ public class ApiResponseTests
         // Act
         var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         });
         
         // Assert
@@ -189,8 +190,13 @@ public class ApiResponseTests
         };
         
         // Act
-        var json = JsonSerializer.Serialize(originalResponse);
-        var deserializedResponse = JsonSerializer.Deserialize<ApiResponse>(json);
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+        var json = JsonSerializer.Serialize(originalResponse, options);
+        var deserializedResponse = JsonSerializer.Deserialize<ApiResponse>(json, options);
         
         // Assert
         deserializedResponse.Should().NotBeNull();
