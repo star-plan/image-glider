@@ -42,3 +42,6 @@ app.UseExceptionHandler();
 app.UseEndpoints<Program>();
 
 app.Run();
+
+// 使 Program 类可以被测试项目访问
+public partial class Program { }
