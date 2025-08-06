@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
@@ -87,8 +88,36 @@ public class ImageWatermark : IImageWatermark
             var rgba = color.ToPixel<Rgba32>();
             var watermarkColor = Color.FromRgba(rgba.R, rgba.G, rgba.B, (byte)(255 * opacity / 100));
 
-            // 创建字体
-            var font = SystemFonts.CreateFont("Arial", fontSize);
+            // 创建字体 - 使用跨平台兼容的字体回退机制
+            Font font;
+            try
+            {
+                // 尝试使用 Arial 字体
+                font = SystemFonts.CreateFont("Arial", fontSize);
+            }
+            catch
+            {
+                try
+                {
+                    // 如果 Arial 不可用，尝试使用 DejaVu Sans（Linux 常见字体）
+                    font = SystemFonts.CreateFont("DejaVu Sans", fontSize);
+                }
+                catch
+                {
+                    try
+                    {
+                        // 如果 DejaVu Sans 不可用，尝试使用 Liberation Sans
+                        font = SystemFonts.CreateFont("Liberation Sans", fontSize);
+                    }
+                    catch
+                    {
+                        // 最后回退到系统默认字体
+                        var availableFonts = SystemFonts.Families.ToArray();
+                        var defaultFontFamily = availableFonts.Length > 0 ? availableFonts[0].Name : "sans-serif";
+                        font = SystemFonts.CreateFont(defaultFontFamily, fontSize);
+                    }
+                }
+            }
 
             // 计算文本位置
             var textOptions = new TextOptions(font);
