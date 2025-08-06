@@ -37,9 +37,12 @@ jobs:
       
       - name: 恢复依赖
         run: dotnet restore
-      
+
+      - name: 构建项目
+        run: dotnet build --no-restore -c Release
+
       - name: 运行测试
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --no-build -c Release --verbosity detailed
 
   # 第二步：发布NuGet包
   publish-nuget:
