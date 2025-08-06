@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGlider.Example", "src\ImageGlider.Example\ImageGlider.Example.csproj", "{E1A01E1D-EA9C-4913-AC42-CACD24F5AB17}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGlider.Tests", "tests\ImageGlider.Tests\ImageGlider.Tests.csproj", "{A30D60CA-0C3C-43EF-8B5B-EFB34F4F5CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGlider.WebApi.Tests", "tests\ImageGlider.WebApi.Tests\ImageGlider.WebApi.Tests.csproj", "{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGlider.WebApi", "src\ImageGlider.WebApi\ImageGlider.WebApi.csproj", "{BA565DD6-56CB-44A3-995B-C26F3B39FF6D}"
 EndProject
@@ -87,6 +89,18 @@ Global
 		{BA565DD6-56CB-44A3-995B-C26F3B39FF6D}.Release|x64.Build.0 = Release|Any CPU
 		{BA565DD6-56CB-44A3-995B-C26F3B39FF6D}.Release|x86.ActiveCfg = Release|Any CPU
 		{BA565DD6-56CB-44A3-995B-C26F3B39FF6D}.Release|x86.Build.0 = Release|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Debug|x64.Build.0 = Debug|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Debug|x86.Build.0 = Debug|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Release|x64.ActiveCfg = Release|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Release|x64.Build.0 = Release|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Release|x86.ActiveCfg = Release|Any CPU
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,5 +111,6 @@ Global
 		{E1A01E1D-EA9C-4913-AC42-CACD24F5AB17} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{BA565DD6-56CB-44A3-995B-C26F3B39FF6D} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{A30D60CA-0C3C-43EF-8B5B-EFB34F4F5CAB} = {43792822-C208-4C2B-827D-D3536577D929}
+		{C1B2A3D4-E5F6-7890-ABCD-EF1234567890} = {43792822-C208-4C2B-827D-D3536577D929}
 	EndGlobalSection
 EndGlobal
