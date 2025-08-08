@@ -141,6 +141,168 @@ public class ImageProcessorFactoryTests
     /// 测试通过类型创建处理器 - 格式转换器
     /// </summary>
     [Fact]
+    public void CreateProcessor_FormatConverter_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.FormatConverter);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageFormatConverter>(processor);
+        Assert.IsAssignableFrom<IImageFormatConverter>(processor);
+    }
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 尺寸调整器
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_Resizer_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.Resizer);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageResizer>(processor);
+        Assert.IsAssignableFrom<IImageResizer>(processor);
+    }
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 压缩器
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_Compressor_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.Compressor);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageCompressor>(processor);
+        Assert.IsAssignableFrom<IImageCompressor>(processor);
+    }
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 裁剪器
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_Cropper_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.Cropper);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageCropper>(processor);
+        Assert.IsAssignableFrom<IImageCropper>(processor);
+    }
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 水印处理器
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_Watermark_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.Watermark);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageWatermark>(processor);
+        Assert.IsAssignableFrom<IImageWatermark>(processor);
+    }
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 元数据清理器
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_MetadataStripper_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.MetadataStripper);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageMetadataStripper>(processor);
+        Assert.IsAssignableFrom<IImageMetadataStripper>(processor);
+    }
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 颜色调整器
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_ColorAdjuster_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.ColorAdjuster);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageColorAdjuster>(processor);
+        Assert.IsAssignableFrom<IImageColorAdjuster>(processor);
+    }
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 信息提取器
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_InfoExtractor_ReturnsValidInstance()
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(ImageProcessorType.InfoExtractor);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType<ImageInfoExtractor>(processor);
+        Assert.IsAssignableFrom<IImageInfoExtractor>(processor);
+    }
+
+    /// <summary>
+    /// 测试创建处理器时传入无效类型应抛出异常
+    /// </summary>
+    [Fact]
+    public void CreateProcessor_InvalidType_ThrowsArgumentException()
+    {
+        // Arrange
+        var invalidType = (ImageProcessorType)999;
+
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() =>
+            ImageProcessorFactory.CreateProcessor(invalidType));
+
+        Assert.Contains("不支持的处理器类型", exception.Message);
+        Assert.Contains("999", exception.Message);
+    }
+
+    /// <summary>
+    /// 测试所有处理器类型枚举值都能正确创建处理器
+    /// </summary>
+    [Theory]
+    [InlineData(ImageProcessorType.FormatConverter, typeof(ImageFormatConverter))]
+    [InlineData(ImageProcessorType.Resizer, typeof(ImageResizer))]
+    [InlineData(ImageProcessorType.Compressor, typeof(ImageCompressor))]
+    [InlineData(ImageProcessorType.Cropper, typeof(ImageCropper))]
+    [InlineData(ImageProcessorType.Watermark, typeof(ImageWatermark))]
+    [InlineData(ImageProcessorType.MetadataStripper, typeof(ImageMetadataStripper))]
+    [InlineData(ImageProcessorType.ColorAdjuster, typeof(ImageColorAdjuster))]
+    [InlineData(ImageProcessorType.InfoExtractor, typeof(ImageInfoExtractor))]
+    public void CreateProcessor_AllValidTypes_ReturnsCorrectType(ImageProcessorType processorType, Type expectedType)
+    {
+        // Act
+        var processor = ImageProcessorFactory.CreateProcessor(processorType);
+
+        // Assert
+        Assert.NotNull(processor);
+        Assert.IsType(expectedType, processor);
+        Assert.IsAssignableFrom<IImageProcessor>(processor);
+    }
+
+
+
+    /// <summary>
+    /// 测试通过类型创建处理器 - 格式转换器
+    /// </summary>
+    [Fact]
     public void CreateProcessor_FormatConverter_ReturnsCorrectType()
     {
         // Act
@@ -249,21 +411,7 @@ public class ImageProcessorFactoryTests
         Assert.IsType<ImageInfoExtractor>(processor);
     }
 
-    /// <summary>
-    /// 测试通过无效类型创建处理器 - 应该抛出异常
-    /// </summary>
-    [Fact]
-    public void CreateProcessor_InvalidType_ThrowsArgumentException()
-    {
-        // Arrange
-        var invalidType = (ImageProcessorType)999;
 
-        // Act & Assert
-        var exception = Assert.Throws<ArgumentException>(() =>
-            ImageProcessorFactory.CreateProcessor(invalidType));
-        
-        Assert.Contains("不支持的处理器类型", exception.Message);
-    }
 
     /// <summary>
     /// 测试工厂方法返回的实例是独立的
