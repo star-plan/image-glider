@@ -193,10 +193,15 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { ElMessage } from 'element-plus'
+import {ref, computed, watch, onUnmounted} from 'vue'
+import { ElMessage, ElLoading } from 'element-plus'
 import { RefreshLeft, Download } from '@element-plus/icons-vue'
+
+// 导入组件
 import ImageUpload from '../components/common/ImageUpload.vue'
+// 导入方法
+import { imageApi } from '../http/modules/imageApi'
+import { createImagePreview, revokeImagePreview } from '../utils/file'
 
 const selectedFile = ref(null)
 const processing = ref(false)
@@ -275,41 +280,37 @@ const compressImage = async () => {
   }
   
   processing.value = true
-  
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
   try {
     // Simulate API call with FormData
     const formData = new FormData()
     formData.append('file', selectedFile.value)
     formData.append('compressionLevel', settings.value.compressionLevel)
     formData.append('preserveMetadata', settings.value.preserveMetadata)
-    
+
     // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // For demo purposes, create a compressed version using canvas
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    const img = new Image()
-    
-    img.onload = () => {
-      canvas.width = img.width
-      canvas.height = img.height
-      ctx.drawImage(img, 0, 0)
-      
-      // Convert to blob with compression
-      canvas.toBlob((blob) => {
-        compressedImageUrl.value = URL.createObjectURL(blob)
-        compressedSize.value = blob.size
-        ElMessage.success('图片压缩完成')
-      }, 'image/jpeg', settings.value.compressionLevel / 100)
+    const res = await imageApi.compressImageApi(formData)
+    if (res.statusCode === 200) {
+      const blob = await imageApi.downloadFileApi(res.data);
+
+      // 设置结果
+      compressedImageUrl.value = createImagePreview(blob.data);
+      // 从响应头中获取文件大小
+      compressedSize.value = parseInt(blob.headers['content-length'])
+      loading.close()
+      // 显示成功消息
+      ElMessage.success(res.message);
     }
-    
-    img.src = originalImageUrl.value
     
   } catch (error) {
     ElMessage.error('压缩失败：' + error.message)
   } finally {
     processing.value = false
+    loading.close()
   }
 }
 
@@ -345,6 +346,12 @@ watch(() => settings.value.compressionLevel, (newLevel) => {
     qualityPreset.value = 'custom'
   }
 })
+
+onUnmounted(() => {
+  if (compressedImageUrl.value) {
+    revokeImagePreview(compressedImageUrl.value);
+  }
+});
 </script>
 
 <style scoped>

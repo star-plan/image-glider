@@ -67,6 +67,9 @@
                 show-stops
                 show-input
               />
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                仅适用于 JPEG格式 和 WEBP 格式的图片
+              </p>
             </div>
           </div>
 
@@ -260,9 +263,13 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import { RefreshLeft, Delete, Download } from '@element-plus/icons-vue'
+// 导入组件
 import ImageUpload from '../components/common/ImageUpload.vue'
+// 导入方法
+import { imageApi } from '../http/modules/imageApi'
+import { downloadFile } from "../utils/file.js";
 
 const selectedFile = ref(null)
 const processing = ref(false)
@@ -411,6 +418,7 @@ const resetCleanupSettings = () => {
     stripXmp: true,
     quality: 90
   }
+  selectedFile.value = null
 }
 
 const cleanMetadata = async () => {
@@ -418,11 +426,15 @@ const cleanMetadata = async () => {
     ElMessage.warning('请先上传图片')
     return
   }
-  
+
   processing.value = true
-  
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+
   try {
-    // Simulate API call with FormData
     const formData = new FormData()
     formData.append('file', selectedFile.value)
     formData.append('stripAll', cleanupSettings.value.stripAll)
@@ -430,33 +442,20 @@ const cleanMetadata = async () => {
     formData.append('stripIcc', cleanupSettings.value.stripIcc)
     formData.append('stripXmp', cleanupSettings.value.stripXmp)
     formData.append('quality', cleanupSettings.value.quality)
-    
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // For demo purposes, create cleaned version using canvas
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    const img = new Image()
-    
-    img.onload = () => {
-      canvas.width = img.width
-      canvas.height = img.height
-      ctx.drawImage(img, 0, 0)
-      
-      canvas.toBlob((blob) => {
-        cleanedImageUrl.value = URL.createObjectURL(blob)
-        cleanedSize.value = blob.size
-        ElMessage.success('元数据清理完成')
-      }, 'image/jpeg', cleanupSettings.value.quality / 100)
+
+    const res = await imageApi.cleanMetadataApi(formData)
+    if (res.statusCode === 200) {
+      const blob = await imageApi.downloadFileApi(res.data)
+      loading.close()
+      // 显示成功消息
+      ElMessage.success(res.message)
+      downloadFile(blob.data, selectedFile.value.name)
     }
-    
-    img.src = originalImageUrl.value
-    
   } catch (error) {
     ElMessage.error('清理失败：' + error.message)
   } finally {
     processing.value = false
+    loading.close()
   }
 }
 

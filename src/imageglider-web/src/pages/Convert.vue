@@ -79,24 +79,8 @@
                   show-input
               />
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                仅适用于 JPEG 和 WEBP 格式
+                仅适用于 JPEG格式 和 WEBP 格式的图片
               </p>
-            </div>
-
-            <!-- Format-specific Options -->
-            <div v-if="settings.targetFormat === 'png'" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">PNG 选项</h4>
-              <el-checkbox v-model="settings.preserveTransparency">
-                保留透明度
-              </el-checkbox>
-            </div>
-
-            <div v-if="settings.targetFormat === 'webp'" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">WEBP 选项</h4>
-              <el-radio-group v-model="settings.webpMode">
-                <el-radio label="lossy">有损压缩</el-radio>
-                <el-radio label="lossless">无损压缩</el-radio>
-              </el-radio-group>
             </div>
           </div>
 
@@ -152,21 +136,22 @@
 
       <!-- Preview and Result Section -->
       <div v-if="selectedFile" class="space-y-6">
-        <!-- Original Image Preview -->
+        <!-- Format Information -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">原始图片</h2>
-          <div class="text-center">
-            <img
-                :src="originalImageUrl"
-                alt="原始图片"
-                class="max-h-64 mx-auto rounded-lg shadow-md"
-            />
-            <div class="mt-4 space-y-1">
-              <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ selectedFile.name }}
-              </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
-                {{ currentFormat.toUpperCase() }} • {{ formatFileSize(selectedFile.size) }}
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">格式说明</h2>
+
+          <div class="space-y-4">
+            <div v-for="format in formatInfo" :key="format.name" class="border-l-4 pl-4" :class="format.borderColor">
+              <h3 class="font-semibold text-gray-900 dark:text-white">{{ format.name }}</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ format.description }}</p>
+              <div class="flex flex-wrap gap-2 mt-2">
+                <span
+                    v-for="feature in format.features"
+                    :key="feature"
+                    class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                >
+                  {{ feature }}
+                </span>
               </div>
             </div>
           </div>
@@ -225,57 +210,26 @@
           </div>
         </div>
 
-        <!-- Format Information -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">格式说明</h2>
-
-          <div class="space-y-4">
-            <div v-for="format in formatInfo" :key="format.name" class="border-l-4 pl-4" :class="format.borderColor">
-              <h3 class="font-semibold text-gray-900 dark:text-white">{{ format.name }}</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ format.description }}</p>
-              <div class="flex flex-wrap gap-2 mt-2">
-                <span
-                    v-for="feature in format.features"
-                    :key="feature"
-                    class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-                >
-                  {{ feature }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
-  <!-- 自定义加载组件 -->
-  <LoadingSpinner
-      :show="isConverting"
-      :text="loadingText"
-      :progress="conversionProgress"
-      :show-progress="showProgress"
-  />
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted } from 'vue'
-import { ElMessage,ElLoading } from 'element-plus'
-import { RefreshLeft, RefreshRight, Download, Picture, PictureRounded } from '@element-plus/icons-vue'
+import { computed, onUnmounted, ref } from 'vue'
+import { ElLoading, ElMessage } from 'element-plus'
+import { Download, RefreshLeft, RefreshRight } from '@element-plus/icons-vue'
 // 导入组件
 import ImageUpload from '../components/common/ImageUpload.vue'
 // 导入方法
 import { imageApi } from '../http/modules/imageApi'
-import { createImagePreview, revokeImagePreview, formatFileSize } from '../utils/file'
+import { createImagePreview, formatFileSize, revokeImagePreview } from '../utils/file'
 
 const selectedFile = ref(null)
 const processing = ref(false)
 const originalImageUrl = ref('')
 const convertedImageUrl = ref('')
 const convertedSize = ref(0)
-const isConverting = ref(false);
-const loadingText = ref('');
-const conversionProgress = ref(0);
-const showProgress = ref(false);
 
 const settings = ref({
   targetFormat: 'jpg',
@@ -312,6 +266,20 @@ const availableFormats = [
     description: '支持动画',
     icon: 'PictureRounded',
     color: 'text-purple-500'
+  },
+  {
+    value: 'bmp',
+    name: 'BMP',
+    description: '不压缩，图像质量高',
+    icon: 'PictureRounded',
+    color: 'text-yellow-500'
+  },
+  {
+    value: 'tiff',
+    name: 'TIFF',
+    description: '高质量图像格式',
+    icon: 'PictureRounded',
+    color: 'text-red-500'
   }
 ]
 
@@ -339,6 +307,18 @@ const formatInfo = [
     description: '支持动画的格式，颜色有限，适合简单动画和图标',
     features: ['动画支持', '256色', '小文件', '广泛支持'],
     borderColor: 'border-purple-500'
+  },
+  {
+    name: 'BMP',
+    description: '不压缩的位图格式，文件体积大，适合简单位图、Windows环境',
+    features: ['不压缩', '文件大', '图像质量高', '适合图标'],
+    borderColor: 'border-yellow-500'
+  },
+  {
+    name: 'TIFF',
+    description: '高质量的图像格式，支持多种颜色，文件大但支持多种格式',
+    features: ['多种颜色', '文件大', '支持多种格式', '高质量'],
+    borderColor: 'border-red-500'
   }
 ]
 
@@ -366,6 +346,10 @@ const estimatedSize = computed(() => {
     return Math.round(originalSize * 0.6)
   } else if (toFormat === 'gif') {
     return Math.round(originalSize * 0.8)
+  } else if (toFormat === 'bmp') {
+    return Math.round(originalSize * 3)
+  } else if (toFormat === 'tiff') {
+    return Math.round(originalSize * 5)
   }
 
   return originalSize
@@ -408,7 +392,7 @@ const handleFileChange = (file) => {
 }
 
 const isLossyFormat = (format) => {
-  return ['jpg', 'webp'].includes(format)
+  return ['jpg','webp'].includes(format)
 }
 
 const resetSettings = () => {
@@ -418,6 +402,10 @@ const resetSettings = () => {
     preserveTransparency: true,
     webpMode: 'lossy'
   }
+  selectedFile.value = null
+  originalImageUrl.value = ''
+  convertedImageUrl.value = ''
+  convertedSize.value = 0
 }
 
 const convertImage = async () => {
@@ -448,62 +436,17 @@ const convertImage = async () => {
     const res = await imageApi.convertImageApi(formData)
     if (res.statusCode === 200) {
       const blob = await imageApi.downloadFileApi(res.data);
-      loading.close()
-      
-      const img = new Image();
 
-      // 创建图片加载的Promise
-      const imgLoadPromise = new Promise((resolve, reject) => {
-        img.onload = () => resolve(img);
-        img.onerror = (err) => reject(new Error('图片加载失败'));
-      });
-
-      // 设置图片源为Blob URL
-      img.src = createImagePreview(blob.data);
-
-      // 等待图片加载完成
-      const loadedImg = await imgLoadPromise;
-
-      // 创建Canvas
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      // 设置Canvas尺寸
-      canvas.width = loadedImg.naturalWidth;
-      canvas.height = loadedImg.naturalHeight;
-
-      // 绘制图片到Canvas
-      ctx.drawImage(loadedImg, 0, 0);
-
-      // 根据目标格式设置参数
-      const formatSettings = {
-        'jpeg': {mimeType: 'image/jpeg', quality: settings.value.quality / 100},
-        'jpg': {mimeType: 'image/jpeg', quality: settings.value.quality / 100},
-        'png': {mimeType: 'image/png', quality: undefined},
-        'webp': {mimeType: 'image/webp', quality: settings.value.quality / 100},
-        'gif': {mimeType: 'image/gif', quality: undefined}
-      };
-
-      const {mimeType, quality} = formatSettings[settings.value.targetFormat] ||
-      formatSettings['jpeg'];
-
-      // 创建Canvas转换的Promise
-      const canvasToBlobPromise = new Promise((resolve) => {
-        canvas.toBlob((convertedBlob) => {
-          if (!convertedBlob) {
-            throw new Error('图片转换失败');
-          }
-          resolve(convertedBlob);
-        }, mimeType, quality);
-      });
-
-      // 等待转换完成
-      const convertedBlob = await canvasToBlobPromise;
+      if (settings.value.targetFormat === 'tiff') {
+        ElMessage.success(res.message);
+        return;
+      }
 
       // 设置结果
-      convertedImageUrl.value = img.src;
-      convertedSize.value = convertedBlob.size;
-
+      convertedImageUrl.value = createImagePreview(blob.data);
+      // 从响应头中获取文件大小
+      convertedSize.value = parseInt(blob.headers['content-length'])
+      loading.close()
       // 显示成功消息
       ElMessage.success(res.message);
     }
