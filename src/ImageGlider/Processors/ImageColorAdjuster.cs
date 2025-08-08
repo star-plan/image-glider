@@ -187,7 +187,7 @@ public class ImageColorAdjuster : IImageColorAdjuster
                 {
                     var fileName = Path.GetFileNameWithoutExtension(sourceFile);
                     var fileExtension = Path.GetExtension(sourceFile);
-                    var targetFile = Path.Combine(outputDirectory, $"{fileName}_adjusted{fileExtension}");
+                    var targetFile = Path.Combine(outputDirectory, $"{fileName}{fileExtension}");
 
                     if (AdjustColor(sourceFile, targetFile, brightness, contrast, saturation, hue, gamma, quality))
                     {

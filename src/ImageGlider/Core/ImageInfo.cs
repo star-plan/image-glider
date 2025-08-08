@@ -106,8 +106,9 @@ public class ImageInfo
     /// <returns>格式化的图像信息字符串</returns>
     public override string ToString()
     {
+        var fileSizeMB = FileSize / 1024.0 / 1024.0;
         return $"文件: {FilePath}\n" +
-               $"大小: {FileSize:N0} 字节 ({FileSize / 1024.0 / 1024.0:F2} MB)\n" +
+               $"大小: {FileSize:N0} 字节 ({fileSizeMB:F2} MB)\n" +
                $"尺寸: {Width} x {Height} 像素\n" +
                $"格式: {Format}\n" +
                $"色深: {BitDepth} 位\n" +

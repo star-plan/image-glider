@@ -68,7 +68,7 @@ public class ImageWatermark : IImageWatermark
                 return false;
             }
 
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrWhiteSpace(text))
             {
                 return false;
             }
@@ -297,7 +297,7 @@ public class ImageWatermark : IImageWatermark
                 {
                     var fileName = IOPath.GetFileNameWithoutExtension(sourceFile);
                     var extension = IOPath.GetExtension(sourceFile);
-                    var targetFile = IOPath.Combine(outputDirectory, $"{fileName}_watermarked{extension}");
+                    var targetFile = IOPath.Combine(outputDirectory, $"{fileName}{extension}");
 
                     if (processFunc(sourceFile, targetFile))
                     {

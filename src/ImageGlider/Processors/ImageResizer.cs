@@ -23,9 +23,42 @@ public class ImageResizer : IImageResizer
     /// <returns>处理是否成功</returns>
     public bool ProcessImage(string sourceFilePath, string targetFilePath, int quality = 90)
     {
-        // 默认保持原始尺寸
-        using var image = Image.Load(sourceFilePath);
-        return ResizeImage(sourceFilePath, targetFilePath, image.Width, image.Height, ImageGlider.Enums.ResizeMode.KeepAspectRatio, quality);
+        try
+        {
+            // 验证输入参数
+            if (string.IsNullOrEmpty(sourceFilePath) || string.IsNullOrEmpty(targetFilePath))
+            {
+                return false;
+            }
+
+            if (!File.Exists(sourceFilePath))
+            {
+                return false;
+            }
+
+            // 验证目标文件路径是否有效
+            try
+            {
+                Path.GetFullPath(targetFilePath);
+                var invalidChars = Path.GetInvalidPathChars();
+                if (targetFilePath.IndexOfAny(invalidChars) >= 0)
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            // 默认保持原始尺寸
+            using var image = Image.Load(sourceFilePath);
+            return ResizeImage(sourceFilePath, targetFilePath, image.Width, image.Height, ImageGlider.Enums.ResizeMode.KeepAspectRatio, quality);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -136,10 +169,8 @@ public class ImageResizer : IImageResizer
 
             foreach (var file in files)
             {
-                var fileName = Path.GetFileNameWithoutExtension(file);
-                var fileExt = Path.GetExtension(file);
-                var targetFileName = fileName + "_resized" + fileExt;
-                var targetFilePath = Path.Combine(outputDirectory, targetFileName);
+                var fileName = Path.GetFileName(file);
+                var targetFilePath = Path.Combine(outputDirectory, fileName);
 
                 if (ResizeImage(file, targetFilePath, width, height, resizeMode, quality))
                 {

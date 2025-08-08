@@ -164,10 +164,8 @@ public class ImageCompressor : IImageCompressor
             {
                 try
                 {
-                    var fileName = Path.GetFileNameWithoutExtension(sourceFile);
-                    var extension = Path.GetExtension(sourceFile);
-                    var targetFileName = $"{fileName}_compressed{extension}";
-                    var targetFilePath = Path.Combine(outputDirectory, targetFileName);
+                    var fileName = Path.GetFileName(sourceFile);
+                    var targetFilePath = Path.Combine(outputDirectory, fileName);
 
                     if (CompressImage(sourceFile, targetFilePath, compressionLevel, preserveMetadata))
                     {

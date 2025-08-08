@@ -64,11 +64,34 @@ public class ImageCropper : IImageCropper
                 return false;
             }
 
+            // 验证目标文件路径是否有效
+            try
+            {
+                Path.GetFullPath(targetFilePath);
+                var invalidChars = Path.GetInvalidPathChars();
+                if (targetFilePath.IndexOfAny(invalidChars) >= 0)
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
             // 确保目标目录存在
             var targetDirectory = Path.GetDirectoryName(targetFilePath);
             if (!string.IsNullOrEmpty(targetDirectory) && !Directory.Exists(targetDirectory))
             {
-                Directory.CreateDirectory(targetDirectory);
+                try
+                {
+                    Directory.CreateDirectory(targetDirectory);
+                }
+                catch
+                {
+                    // 无法创建目录（可能是无效路径）
+                    return false;
+                }
             }
 
             using var image = Image.Load(sourceFilePath);
@@ -80,24 +103,22 @@ public class ImageCropper : IImageCropper
                 return false;
             }
 
-            // 调整裁剪区域以确保不超出图像边界
-            var actualWidth = Math.Min(width, image.Width - x);
-            var actualHeight = Math.Min(height, image.Height - y);
-
-            if (actualWidth != width || actualHeight != height)
+            // 验证裁剪区域是否完全超出图像边界
+            if (x + width > image.Width || y + height > image.Height)
             {
-                // Console.WriteLine($"裁剪区域已调整以适应图像边界。原始: {width}x{height}, 调整后: {actualWidth}x{actualHeight}");
+                // Console.WriteLine($"裁剪区域超出图像边界。图像尺寸: {image.Width}x{image.Height}, 裁剪区域: ({x}, {y}, {width}, {height})");
+                return false;
             }
 
             // 执行裁剪操作
-            image.Mutate(ctx => ctx.Crop(new Rectangle(x, y, actualWidth, actualHeight)));
+            image.Mutate(ctx => ctx.Crop(new Rectangle(x, y, width, height)));
 
             // 保存裁剪后的图像
             var result = SaveImage(image, targetFilePath, quality);
             
             if (result)
             {
-                // Console.WriteLine($"图像裁剪成功: {sourceFilePath} -> {targetFilePath}, 裁剪区域: ({x}, {y}, {actualWidth}, {actualHeight})");
+                // Console.WriteLine($"图像裁剪成功: {sourceFilePath} -> {targetFilePath}, 裁剪区域: ({x}, {y}, {width}, {height})");
             }
             
             return result;
@@ -249,7 +270,7 @@ public class ImageCropper : IImageCropper
                 try
                 {
                     var fileName = Path.GetFileNameWithoutExtension(sourceFile);
-                    var targetFile = Path.Combine(outputDirectory, $"{fileName}_cropped{Path.GetExtension(sourceFile)}");
+                    var targetFile = Path.Combine(outputDirectory, $"{fileName}{Path.GetExtension(sourceFile)}");
                     
                     if (CropImage(sourceFile, targetFile, x, y, width, height, quality))
                     {
@@ -330,7 +351,7 @@ public class ImageCropper : IImageCropper
                 {
                     var fileName = Path.GetFileNameWithoutExtension(sourceFile);
                     var extension = Path.GetExtension(sourceFile);
-                    var targetFile = Path.Combine(outputDirectory, $"{fileName}_cropped{extension}");
+                    var targetFile = Path.Combine(outputDirectory, $"{fileName}{extension}");
 
                     if (CropImageCenter(sourceFile, targetFile, width, height, quality))
                     {
