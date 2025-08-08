@@ -213,7 +213,7 @@ public class IntegrationTests : IDisposable
         TestImageHelper.CreateTestImage(sourceImage, 200, 200);
         
         var step1Output = Path.Combine(_outputDir, "step1.jpg");
-        var invalidOutput = Path.Combine("invalid_directory_that_does_not_exist", "step2.jpg");
+        var invalidOutput = "C:\\invalid<>path\\step2.jpg"; // 包含无效字符的路径
         var step3Output = Path.Combine(_outputDir, "step3.jpg");
         
         // Act

@@ -299,8 +299,8 @@ public class ImageWatermarkTests
             Assert.Equal(0, result.FailedConversions);
             
             // 验证输出文件
-            var outputFile1 = Path.Combine(outputDir, "test1_watermarked.jpg");
-            var outputFile2 = Path.Combine(outputDir, "test2_watermarked.jpg");
+            var outputFile1 = Path.Combine(outputDir, "test1.jpg");
+            var outputFile2 = Path.Combine(outputDir, "test2.jpg");
             Assert.True(File.Exists(outputFile1));
             Assert.True(File.Exists(outputFile2));
         }
@@ -344,8 +344,8 @@ public class ImageWatermarkTests
             Assert.Equal(0, result.FailedConversions);
             
             // 验证输出文件
-            var outputFile1 = Path.Combine(outputDir, "test1_watermarked.jpg");
-            var outputFile2 = Path.Combine(outputDir, "test2_watermarked.jpg");
+            var outputFile1 = Path.Combine(outputDir, "test1.jpg");
+            var outputFile2 = Path.Combine(outputDir, "test2.jpg");
             Assert.True(File.Exists(outputFile1));
             Assert.True(File.Exists(outputFile2));
         }

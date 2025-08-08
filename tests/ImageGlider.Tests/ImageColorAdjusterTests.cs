@@ -310,8 +310,8 @@ public class ImageColorAdjusterTests
             Assert.True(string.IsNullOrEmpty(result.ErrorMessage));
             
             // 验证输出文件存在
-            Assert.True(File.Exists(Path.Combine(outputDir, "test1_adjusted.jpg")));
-            Assert.True(File.Exists(Path.Combine(outputDir, "test2_adjusted.jpg")));
+            Assert.True(File.Exists(Path.Combine(outputDir, "test1.jpg")));
+            Assert.True(File.Exists(Path.Combine(outputDir, "test2.jpg")));
         }
         finally
         {

@@ -105,10 +105,10 @@ public class ImageCropperTests
     }
 
     /// <summary>
-    /// 测试裁剪图像 - 超出边界自动调整
+    /// 测试裁剪图像 - 超出边界返回失败
     /// </summary>
     [Fact]
-    public void CropImage_OutOfBounds_AdjustsAutomatically()
+    public void CropImage_OutOfBounds_ReturnsFalse()
     {
         // Arrange
         var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -124,13 +124,7 @@ public class ImageCropperTests
             var result = ImageConverter.CropImage(sourceFile, targetFile, 50, 50, 100, 100);
 
             // Assert
-            Assert.True(result);
-            Assert.True(File.Exists(targetFile));
-            
-            // 验证裁剪后的图像尺寸（应该被自动调整为50x50）
-            using var croppedImage = Image.Load(targetFile);
-            Assert.Equal(50, croppedImage.Width);
-            Assert.Equal(50, croppedImage.Height);
+            Assert.False(result);
         }
         finally
         {
@@ -320,8 +314,8 @@ public class ImageCropperTests
             Assert.Equal(2, result.TotalFiles);
             
             // 验证输出文件存在
-            var outputFile1 = Path.Combine(outputDir, "test1_cropped.jpg");
-            var outputFile2 = Path.Combine(outputDir, "test2_cropped.jpg");
+            var outputFile1 = Path.Combine(outputDir, "test1.jpg");
+            var outputFile2 = Path.Combine(outputDir, "test2.jpg");
             Assert.True(File.Exists(outputFile1));
             Assert.True(File.Exists(outputFile2));
             

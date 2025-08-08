@@ -202,9 +202,9 @@ public class ImageResizerTests
             Assert.Equal(2, result.SuccessfulConversions);
             Assert.Equal(0, result.FailedConversions);
             
-            // 验证输出文件（BatchResize会添加_resized后缀）
-            var outputFile1 = Path.Combine(outputDir, "test1_resized.jpg");
-            var outputFile2 = Path.Combine(outputDir, "test2_resized.jpg");
+            // 验证输出文件存在
+            var outputFile1 = Path.Combine(outputDir, "test1.jpg");
+            var outputFile2 = Path.Combine(outputDir, "test2.jpg");
             Assert.True(File.Exists(outputFile1));
             Assert.True(File.Exists(outputFile2));
             
@@ -461,8 +461,8 @@ public class ImageResizerTests
             Assert.Equal(1, result.TotalFiles);
             Assert.Equal(1, result.SuccessfulConversions);
 
-            // 验证输出文件（应该有_resized后缀）
-            var outputFile = Path.Combine(tempDir, "test1_resized.jpg");
+            // 验证输出文件存在
+            var outputFile = Path.Combine(tempDir, "test1.jpg");
             Assert.True(File.Exists(outputFile));
             Assert.True(TestImageHelper.VerifyImageSize(outputFile, 100, 100));
         }

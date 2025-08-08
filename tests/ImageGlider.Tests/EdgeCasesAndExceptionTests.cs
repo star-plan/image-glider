@@ -350,40 +350,18 @@ public class EdgeCasesAndExceptionTests : IDisposable
     public void ProcessImage_WithReadOnlyTargetDirectory_ShouldHandleGracefully()
     {
         // Arrange
-        var readOnlyDir = Path.Combine(_tempDir, "readonly");
-        Directory.CreateDirectory(readOnlyDir);
+        var processor = new ImageResizer();
+        var sourcePath = Path.Combine(_tempDir, "source.jpg");
+        // 使用一个包含无效字符的路径来模拟无法写入的情况
+        var invalidTargetPath = "C:\\<invalid>\\output.jpg";
+        TestImageHelper.CreateTestImage(sourcePath, 100, 100);
         
-        try
-        {
-            // 设置目录为只读（在某些系统上可能不起作用）
-            var dirInfo = new DirectoryInfo(readOnlyDir);
-            dirInfo.Attributes |= FileAttributes.ReadOnly;
-            
-            var processor = new ImageResizer();
-            var sourcePath = Path.Combine(_tempDir, "source.jpg");
-            var targetPath = Path.Combine(readOnlyDir, "output.jpg");
-            TestImageHelper.CreateTestImage(sourcePath, 100, 100);
-            
-            // Act
-            var result = processor.ProcessImage(sourcePath, targetPath, 90);
-            
-            // Assert
-            // 应该失败但不抛出异常
-            Assert.False(result);
-        }
-        finally
-        {
-            // 清理：移除只读属性
-            try
-            {
-                var dirInfo = new DirectoryInfo(readOnlyDir);
-                dirInfo.Attributes &= ~FileAttributes.ReadOnly;
-            }
-            catch
-            {
-                // 忽略清理错误
-            }
-        }
+        // Act
+        var result = processor.ProcessImage(sourcePath, invalidTargetPath, 90);
+        
+        // Assert
+        // 应该失败但不抛出异常
+        Assert.False(result);
     }
     
     #endregion

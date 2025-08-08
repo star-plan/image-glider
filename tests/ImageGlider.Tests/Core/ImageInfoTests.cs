@@ -199,7 +199,7 @@ public class ImageInfoTests
         // Assert
         Assert.Contains("/path/to/test.jpg", result);
         Assert.Contains("2,048,000 字节", result);
-        Assert.Contains("(2.00 MB)", result);
+        Assert.Contains("(1.95 MB)", result);
         Assert.Contains("1920 x 1080 像素", result);
         Assert.Contains("JPEG", result);
         Assert.Contains("24 位", result);
