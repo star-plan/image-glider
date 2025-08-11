@@ -46,7 +46,7 @@ public class FileService:IFileService
         memoryStream.Position = 0;
         
         // todo: 删除转换后文件暂时未想到好的方法
-        // DeleteFile(filePath);
+        DeleteFile(filePath);
         return (mimeType, memoryStream);
     }
     public string GetFileName(string filePath)
