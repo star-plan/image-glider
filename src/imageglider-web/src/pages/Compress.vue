@@ -208,6 +208,7 @@ const processing = ref(false)
 const originalImageUrl = ref('')
 const compressedImageUrl = ref('')
 const qualityPreset = ref('custom')
+let lastObjectUrl = null
 
 const settings = ref({
   compressionLevel: 75,
@@ -346,6 +347,17 @@ watch(() => settings.value.compressionLevel, (newLevel) => {
     qualityPreset.value = 'custom'
   }
 })
+
+function updateCroppedImage(blob) {
+  // 如果之前有旧 URL，先释放
+  if (lastObjectUrl) {
+    revokeImagePreview(lastObjectUrl)
+  }
+
+  const newUrl = createImagePreview(blob)
+  lastObjectUrl = newUrl
+  compressedImageUrl.value = newUrl
+}
 
 onUnmounted(() => {
   if (compressedImageUrl.value) {

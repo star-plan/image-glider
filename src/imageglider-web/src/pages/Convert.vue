@@ -230,6 +230,7 @@ const processing = ref(false)
 const originalImageUrl = ref('')
 const convertedImageUrl = ref('')
 const convertedSize = ref(0)
+let lastObjectUrl = null
 
 const settings = ref({
   targetFormat: 'jpg',
@@ -321,6 +322,7 @@ const formatInfo = [
     borderColor: 'border-red-500'
   }
 ]
+
 
 const currentFormat = computed(() => {
   if (!selectedFile.value) return ''
@@ -443,7 +445,7 @@ const convertImage = async () => {
       }
 
       // 设置结果
-      convertedImageUrl.value = createImagePreview(blob.data);
+      updateCroppedImage(blob.data);
       // 从响应头中获取文件大小
       convertedSize.value = parseInt(blob.headers['content-length'])
       loading.close()
@@ -472,6 +474,16 @@ const downloadResult = () => {
   }
 }
 
+function updateCroppedImage(blob) {
+  // 如果之前有旧 URL，先释放
+  if (lastObjectUrl) {
+    revokeImagePreview(lastObjectUrl)
+  }
+
+  const newUrl = createImagePreview(blob)
+  lastObjectUrl = newUrl
+  convertedImageUrl.value = newUrl
+}
 
 onUnmounted(() => {
   if (convertedImageUrl.value) {
