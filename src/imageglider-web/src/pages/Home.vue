@@ -102,6 +102,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ArrowDown, ArrowRight } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const featuresSection = ref(null)
@@ -152,6 +153,10 @@ const features = [
 ]
 
 const navigateTo = (path) => {
+  if (path === '/color' || path === '/resize' || path === '/watermark') {
+    ElMessage.warning('该功能尚未开放，敬请期待')
+    return
+  }
   router.push(path)
 }
 

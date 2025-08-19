@@ -6,12 +6,12 @@ const mobileMenuOpen = ref(false)
 
 const navigation = [
   { name: '首页', href: '/', icon: 'House' },
-  { name: '颜色调整', href: '/color', icon: 'Brush' },
+  // { name: '颜色调整', href: '/color', icon: 'Brush' },
   { name: '图片压缩', href: '/compress', icon: 'Files' },
   { name: '格式转换', href: '/convert', icon: 'RefreshRight' },
   { name: '图片裁剪', href: '/crop', icon: 'Crop' },
-  { name: '尺寸调整', href: '/resize', icon: 'FullScreen' },
-  { name: '添加水印', href: '/watermark', icon: 'PictureRounded' },
+  // { name: '尺寸调整', href: '/resize', icon: 'FullScreen' },
+  // { name: '添加水印', href: '/watermark', icon: 'PictureRounded' },
   { name: '图片信息', href: '/info', icon: 'InfoFilled' },
 ]
 
@@ -114,7 +114,7 @@ onMounted(() => {
     <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
       <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         <div class="text-center text-sm text-gray-500 dark:text-gray-400">
-          © 2024 ImageGlider. 现代化的图片处理工具
+          © 2025 ImageGlider. 现代化的图片处理工具
         </div>
       </div>
     </footer>
