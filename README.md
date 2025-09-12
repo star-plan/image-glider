@@ -31,6 +31,7 @@
 - 🧹 **元数据清理**：一键清除 EXIF、ICC、XMP 等隐私敏感的元数据信息
 - 🎨 **颜色调整**：调整亮度、对比度、饱和度、色相、伽马值等颜色参数
 - ℹ️ **信息提取**：获取图像详细信息，支持JSON格式输出
+- ✅ **图像验证**：检测文件是否为有效图片，支持扩展名、文件头和深度验证三种模式
 
 ### 🛠️ 技术特性
 - 🚀 **跨平台**：基于 .NET 9 和 ImageSharp，支持 Windows、Linux、macOS
@@ -395,6 +396,25 @@ Console.WriteLine($"成功转换: {result.SuccessfulConversions}/{result.TotalFi
 // 获取图像信息
 var info = ImageConverter.GetImageInfo("image.jpg");
 Console.WriteLine($"尺寸: {info.Width}x{info.Height}, 格式: {info.Format}");
+
+// 图像文件验证
+using ImageGlider.Utilities;
+
+// 检测文件是否为有效图片（综合检测）
+bool isValidImage = ImageValidator.IsValidImageFile("path/to/file.jpg");
+
+// 启用深度验证（通过ImageSharp加载验证）
+bool isValidWithDeepCheck = ImageValidator.IsValidImageFile("path/to/file.jpg", useDeepValidation: true);
+
+// 仅检测文件扩展名
+bool hasImageExtension = ImageValidator.IsValidImageExtension("file.png");
+
+// 基于文件头检测（魔数签名）
+bool isValidBySignature = ImageValidator.IsValidImageBySignature("path/to/file.jpg");
+
+// 获取支持的图片格式列表
+string[] supportedFormats = ImageValidator.GetSupportedExtensions();
+Console.WriteLine($"支持的格式: {string.Join(", ", supportedFormats)}");
 ```
 
 #### 高级功能示例
@@ -467,6 +487,7 @@ ImageGlider/
 - **ImageConverter**: 主要API入口，提供所有图像处理功能
 - **ImageProcessorFactory**: 处理器工厂，创建各种专用处理器
 - **ImageSizeCalculator**: 尺寸计算工具，支持多种调整模式
+- **ImageValidator**: 图像文件验证工具，提供多种检测模式验证文件是否为有效图片
 - **处理器系列**: 格式转换、尺寸调整、压缩、裁剪、水印等专用处理器
 
 ## 🛠️ 开发指南
