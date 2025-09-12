@@ -68,8 +68,27 @@ public class ImageCropper : IImageCropper
             try
             {
                 Path.GetFullPath(targetFilePath);
+                
+                // 跨平台无效字符检查
                 var invalidChars = Path.GetInvalidPathChars();
+                var invalidFileNameChars = Path.GetInvalidFileNameChars();
+                
+                // 检查路径中的无效字符
                 if (targetFilePath.IndexOfAny(invalidChars) >= 0)
+                {
+                    return false;
+                }
+                
+                // 检查文件名中的无效字符
+                var fileName = Path.GetFileName(targetFilePath);
+                if (!string.IsNullOrEmpty(fileName) && fileName.IndexOfAny(invalidFileNameChars) >= 0)
+                {
+                    return false;
+                }
+                
+                // 额外的跨平台无效字符检查（Windows特有的字符在Linux上可能被允许）
+                var additionalInvalidChars = new char[] { '<', '>', '|', '"', '*', '?' };
+                if (targetFilePath.IndexOfAny(additionalInvalidChars) >= 0)
                 {
                     return false;
                 }
