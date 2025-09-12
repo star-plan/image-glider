@@ -66,7 +66,12 @@ public class ImageInfoEndpoints : IEndpoint
         catch (Exception ex)
         {
             logger.LogError(ex, "获取图片信息过程中发生错误");
-            return Results.StatusCode(500);
+            return Results.BadRequest(new ApiResponse
+            {
+                StatusCode = 400,
+                Successful = false,
+                Message = "图片文件损坏或格式不支持"
+            });
         }
         finally
         {
