@@ -1,0 +1,7 @@
+﻿services:
+  batchconvertimages:
+    image: batchconvertimages
+    build:
+      context: .
+      dockerfile: scripts/BatchConvertImages/Dockerfile
+
