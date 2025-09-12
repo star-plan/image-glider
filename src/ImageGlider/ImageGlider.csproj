@@ -9,8 +9,8 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>ImageGlider</PackageId>
     <Authors>Deali-Axy</Authors>
-    <Description>ImageGlider 核心库 - 纯 C# 实现的跨平台图像格式转换工具套件核心功能。基于 ImageSharp 实现，支持 JPEG、PNG、GIF、BMP、TIFF、WebP 等多种格式的转换。</Description>
-    <PackageTags>image;converter;jpeg;png;gif;bmp;tiff;webp;imagesharp;library;core</PackageTags>
+    <Description>ImageGlider 核心库 - 纯 C# 实现的跨平台图像格式转换工具套件核心功能。基于 ImageSharp 和 ImageMagick 实现，支持 JPEG、PNG、GIF、BMP、TIFF、WebP、AVIF 等多种格式的转换。</Description>
+    <PackageTags>image;converter;jpeg;png;gif;bmp;tiff;webp;avif;imagesharp;imagemagick;library;core</PackageTags>
     <PackageProjectUrl>https://github.com/Deali-Axy/image-glider</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Deali-Axy/image-glider</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -22,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.8" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
   </ItemGroup>
 
 </Project>

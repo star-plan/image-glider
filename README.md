@@ -5,9 +5,9 @@
 ![Test Coverage](https://img.shields.io/badge/coverage-69.4%25-green)
 ![Tests](https://img.shields.io/badge/tests-180%20passed-brightgreen)
 
-**ImageGlider** 是一个功能强大的跨平台图像处理工具套件，使用 C# (.NET 9) 和 [ImageSharp](https://github.com/SixLabors/ImageSharp) 实现。项目采用模块化架构设计，包含核心类库、命令行工具、Web API、示例程序和完整的单元测试，支持 AOT 编译以获得原生性能。
+**ImageGlider** 是一个功能强大的跨平台图像处理工具套件，使用 C# (.NET 9)、[ImageSharp](https://github.com/SixLabors/ImageSharp) 和 [ImageMagick.NET](https://github.com/dlemstra/Magick.NET) 实现。项目采用模块化架构设计，包含核心类库、命令行工具、Web API、示例程序和完整的单元测试，支持 AOT 编译以获得原生性能。
 
-通过ImageGlider，您可以轻松进行图像处理操作，完全摆脱外部依赖，无需 ImageMagick、Node.js 或 Python，适合在 .NET 项目中内嵌、分发或集成自动化流程中使用。
+通过ImageGlider，您可以轻松进行图像处理操作，支持包括现代 AVIF 格式在内的多种图像格式，适合在 .NET 项目中内嵌、分发或集成自动化流程中使用。
 
 🚀 跨平台、零依赖、高性能、全功能的图像处理解决方案！
 
@@ -22,7 +22,7 @@
 ## ✨ 功能特点
 
 ### 🎯 核心图像处理功能
-- 🖼️ **格式转换**：支持 JPEG、PNG、GIF、BMP、TIFF、WebP 等多种图像格式的相互转换
+- 🖼️ **格式转换**：支持 JPEG、PNG、GIF、BMP、TIFF、WebP、AVIF 等多种图像格式的相互转换
 - 📏 **尺寸调整**：支持拉伸、保持宽高比、裁剪等多种调整模式
 - 🗜️ **压缩优化**：智能压缩算法，在保持质量的同时减小文件体积
 - ✂️ **图像裁剪**：精确裁剪指定区域，支持中心裁剪和自定义坐标裁剪
@@ -50,11 +50,12 @@
 ## 前置条件
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- 支持的图像格式：JPEG、PNG、GIF、BMP、TIFF、WebP 等（由 ImageSharp 提供支持）
+- 支持的图像格式：JPEG、PNG、GIF、BMP、TIFF、WebP（由 ImageSharp 提供支持）、AVIF（由 ImageMagick.NET 提供支持）
 
 ## 依赖项
 
-- **SixLabors.ImageSharp** (3.1.8) - 跨平台图像处理库
+- **SixLabors.ImageSharp** (3.1.8) - 跨平台图像处理库，支持常见图像格式
+- **Magick.NET-Q16-AnyCPU** (14.8.2) - ImageMagick .NET 绑定，提供 AVIF 格式支持
 - **xUnit** - 单元测试框架（仅测试项目）
 
 ## 📦 安装方式
@@ -206,6 +207,15 @@ imageglider batch-convert -sd ./input -od ./output -se .jpg -te .png -q 90
 
 # 转换特定格式并设置质量
 imageglider convert -s photo.webp -t photo.jpg --quality 95
+
+# 转换为现代 AVIF 格式（高压缩比）
+imageglider convert -s photo.jpg -t photo.avif --quality 80
+
+# 从 AVIF 格式转换为其他格式
+imageglider convert -s photo.avif -t photo.png
+
+# 批量转换为 AVIF 格式
+imageglider batch-convert -sd ./photos -od ./avif -se .jpg -te .avif -q 75
 ```
 
 #### 📏 尺寸调整 (resize)
@@ -359,6 +369,12 @@ using ImageGlider.Enums;
 // 格式转换
 bool success = ImageConverter.ConvertImage("input.jpg", "output.png", quality: 85);
 
+// 转换为 AVIF 格式（现代高效压缩）
+bool avifSuccess = ImageConverter.ConvertImage("input.jpg", "output.avif", quality: 80);
+
+// 从 AVIF 格式转换
+bool fromAvif = ImageConverter.ConvertImage("input.avif", "output.png");
+
 // 尺寸调整
 bool resized = ImageConverter.ResizeImage("input.jpg", "output.jpg", 800, 600, ResizeMode.KeepAspectRatio);
 
@@ -367,6 +383,10 @@ bool compressed = ImageConverter.CompressImage("input.jpg", "compressed.jpg", qu
 
 // 添加文本水印
 bool watermarked = ImageConverter.AddTextWatermark("input.jpg", "watermarked.jpg", "© 2024", WatermarkPosition.BottomRight);
+
+// 批量转换为 AVIF 格式
+var avifResult = ImageConverter.BatchConvert("./photos", "./avif", ".jpg", ".avif", quality: 75);
+Console.WriteLine($"AVIF 转换成功: {avifResult.SuccessfulConversions}/{avifResult.TotalFiles}");
 
 // 批量处理
 var result = ImageConverter.BatchConvert("./input", "./output", ".jpg", ".png", quality: 90);
@@ -525,9 +545,37 @@ dotnet publish src/ImageGlider.Cli -c Release -r linux-x64 -p:PublishAot=true -p
 
 本项目采用 [MIT 许可证](LICENSE) - 查看 LICENSE 文件了解详情。
 
+## 📋 AVIF 格式支持说明
+
+### 🆕 AVIF 格式特性
+
+**AVIF (AV1 Image File Format)** 是基于 AV1 视频编解码器的现代图像格式，具有以下优势：
+
+- **🗜️ 高压缩效率**: 相比 JPEG 可减少 50% 以上的文件大小
+- **🎨 优秀画质**: 支持 10-bit 和 12-bit 色深，色彩还原更准确
+- **🌐 现代标准**: 由 Alliance for Open Media 开发的开放标准
+- **📱 广泛支持**: Chrome、Firefox、Safari 等主流浏览器已支持
+
+### ⚙️ 技术实现
+
+ImageGlider 通过 **ImageMagick.NET** 库提供 AVIF 格式支持：
+
+- **编码器**: 使用 AV1 编码器进行高效压缩
+- **质量控制**: 支持 1-100 的质量参数调节
+- **兼容性**: 自动处理格式检测和转换
+- **性能优化**: 针对批量处理进行了优化
+
+### 💡 使用建议
+
+- **Web 应用**: AVIF 格式特别适合 Web 图像优化
+- **质量设置**: 推荐质量参数 75-85 获得最佳压缩比和画质平衡
+- **兼容性**: 对于需要广泛兼容的场景，建议同时提供 WebP 或 JPEG 备选
+- **批量转换**: 利用批量转换功能可高效处理大量图像
+
 ## 🙏 致谢
 
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) - 强大的跨平台图像处理库
+- [ImageMagick.NET](https://github.com/dlemstra/Magick.NET) - ImageMagick 的 .NET 绑定，提供 AVIF 格式支持
 - [.NET 团队](https://github.com/dotnet) - 提供优秀的开发平台
 - 所有贡献者和用户的支持
 
