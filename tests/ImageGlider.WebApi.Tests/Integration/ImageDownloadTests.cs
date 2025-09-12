@@ -73,7 +73,7 @@ public class ImageDownloadTests : WebApiTestBase
     [InlineData("../../../etc/passwd")] // 路径遍历攻击
     [InlineData("..\\..\\windows\\system32\\config\\sam")] // Windows 路径遍历
     [InlineData("file|with|pipes.jpg")] // 管道字符
-    [InlineData("file<with>brackets.jpg")] // 尖括号
+    [InlineData("file|with|brackets.jpg")] // 跨平台无效字符
     public async Task DownloadImage_WithMaliciousFileName_ShouldReturnBadRequestOrNotFound(string maliciousFileName)
     {
         // Act

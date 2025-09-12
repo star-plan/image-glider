@@ -353,7 +353,7 @@ public class EdgeCasesAndExceptionTests : IDisposable
         var processor = new ImageResizer();
         var sourcePath = Path.Combine(_tempDir, "source.jpg");
         // 使用一个包含无效字符的路径来模拟无法写入的情况
-        var invalidTargetPath = "C:\\<invalid>\\output.jpg";
+        var invalidTargetPath = "C:\\invalid|path\\output.jpg";
         TestImageHelper.CreateTestImage(sourcePath, 100, 100);
         
         // Act
