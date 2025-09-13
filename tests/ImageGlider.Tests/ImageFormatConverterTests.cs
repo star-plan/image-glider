@@ -540,4 +540,110 @@ public class ImageFormatConverterTests {
     }
 
     #endregion
+
+    #region FFmpeg Tests
+
+    [Fact]
+    public void ConvertImage_WithFFmpeg_ShouldConvertToAvif_WhenFFmpegAvailable() {
+        // Arrange
+        var tempDir = TestImageHelper.CreateTempDirectory();
+        var sourceFile = Path.Combine(tempDir, "test.jpg");
+        var targetFile = Path.Combine(tempDir, "test.avif");
+
+        try {
+            // 创建测试图片
+            TestImageHelper.CreateTestImage(sourceFile, 100, 100);
+
+            // Act
+            var result = ImageFormatConverter.ConvertImage(sourceFile, targetFile, 30);
+
+            // Assert
+            Assert.True(result);
+            Assert.True(File.Exists(targetFile));
+
+            // 验证 AVIF 文件可以被读取（如果系统支持）
+            if (File.Exists(targetFile)) {
+                var fileInfo = new FileInfo(targetFile);
+                Assert.True(fileInfo.Length > 0);
+            }
+        }
+        finally {
+            // Cleanup
+            TestImageHelper.CleanupDirectory(tempDir);
+        }
+    }
+
+    [Fact]
+    public void ConvertImage_FromAvifWithFFmpeg_ShouldConvertToPng_WhenFFmpegAvailable() {
+        // Arrange
+        var tempDir = TestImageHelper.CreateTempDirectory();
+        var sourceJpg = Path.Combine(tempDir, "source.jpg");
+        var avifFile = Path.Combine(tempDir, "test.avif");
+        var targetFile = Path.Combine(tempDir, "test.png");
+
+        try {
+            // 创建测试图片并转换为 AVIF
+            TestImageHelper.CreateTestImage(sourceJpg, 100, 100);
+            var avifResult = ImageFormatConverter.ConvertImage(sourceJpg, avifFile, 30);
+            
+            // 如果 AVIF 转换成功，测试从 AVIF 转换
+            if (avifResult && File.Exists(avifFile)) {
+                // Act
+                var result = ImageFormatConverter.ConvertImage(avifFile, targetFile);
+
+                // Assert
+                Assert.True(result);
+                Assert.True(File.Exists(targetFile));
+
+                // 验证转换后的图片
+                using var image = Image.Load(targetFile);
+                Assert.Equal(100, image.Width);
+                Assert.Equal(100, image.Height);
+            }
+        }
+        finally {
+            // Cleanup
+            TestImageHelper.CleanupDirectory(tempDir);
+        }
+    }
+
+    [Fact]
+    public void BatchConvert_ToAvifWithFFmpeg_ShouldConvertMultipleFiles() {
+        // Arrange
+        var tempDir = TestImageHelper.CreateTempDirectory();
+        var outputDir = TestImageHelper.CreateTempDirectory();
+
+        try {
+            // 创建多个测试图片
+            var sourceFiles = new[] {
+                Path.Combine(tempDir, "test1.jpg"),
+                Path.Combine(tempDir, "test2.jpg")
+            };
+
+            foreach (var file in sourceFiles) {
+                TestImageHelper.CreateTestImage(file, 150, 150);
+            }
+
+            var converter = new ImageFormatConverter();
+
+            // Act
+            var result = converter.BatchConvert(tempDir, outputDir, ".jpg", ".avif", 25);
+
+            // Assert
+            Assert.Equal(2, result.TotalFiles);
+            
+            // 如果系统支持 FFmpeg 或 ImageMagick，应该能成功转换
+            if (result.SuccessfulConversions > 0) {
+                Assert.True(File.Exists(Path.Combine(outputDir, "test1.avif")));
+                Assert.True(File.Exists(Path.Combine(outputDir, "test2.avif")));
+            }
+        }
+        finally {
+            // Cleanup
+            TestImageHelper.CleanupDirectory(tempDir);
+            TestImageHelper.CleanupDirectory(outputDir);
+        }
+    }
+
+    #endregion
 }

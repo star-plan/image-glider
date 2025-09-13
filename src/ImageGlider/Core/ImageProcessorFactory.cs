@@ -5,14 +5,12 @@ namespace ImageGlider.Core;
 /// <summary>
 /// 图像处理器工厂类，用于创建和管理不同的图像处理器
 /// </summary>
-public static class ImageProcessorFactory
-{
+public static class ImageProcessorFactory {
     /// <summary>
     /// 创建图像格式转换器实例
     /// </summary>
     /// <returns>图像格式转换器实例</returns>
-    public static IImageFormatConverter CreateFormatConverter()
-    {
+    public static IImageFormatConverter CreateFormatConverter() {
         return new ImageFormatConverter();
     }
 
@@ -20,8 +18,7 @@ public static class ImageProcessorFactory
     /// 创建图像尺寸调整器实例
     /// </summary>
     /// <returns>图像尺寸调整器实例</returns>
-    public static IImageResizer CreateResizer()
-    {
+    public static IImageResizer CreateResizer() {
         return new ImageResizer();
     }
 
@@ -29,8 +26,7 @@ public static class ImageProcessorFactory
     /// 创建图像压缩器实例
     /// </summary>
     /// <returns>图像压缩器实例</returns>
-    public static IImageCompressor CreateCompressor()
-    {
+    public static IImageCompressor CreateCompressor() {
         return new ImageCompressor();
     }
 
@@ -38,8 +34,7 @@ public static class ImageProcessorFactory
     /// 创建图像裁剪器实例
     /// </summary>
     /// <returns>图像裁剪器实例</returns>
-    public static IImageCropper CreateCropper()
-    {
+    public static IImageCropper CreateCropper() {
         return new ImageCropper();
     }
 
@@ -47,8 +42,7 @@ public static class ImageProcessorFactory
     /// 创建图像水印处理器实例
     /// </summary>
     /// <returns>图像水印处理器实例</returns>
-    public static IImageWatermark CreateWatermark()
-    {
+    public static IImageWatermark CreateWatermark() {
         return new ImageWatermark();
     }
 
@@ -56,8 +50,7 @@ public static class ImageProcessorFactory
     /// 创建图像元数据清理器实例
     /// </summary>
     /// <returns>图像元数据清理器实例</returns>
-    public static IImageMetadataStripper CreateMetadataStripper()
-    {
+    public static IImageMetadataStripper CreateMetadataStripper() {
         return new ImageMetadataStripper();
     }
 
@@ -65,8 +58,7 @@ public static class ImageProcessorFactory
     /// 创建图像颜色调整器实例
     /// </summary>
     /// <returns>图像颜色调整器实例</returns>
-    public static IImageColorAdjuster CreateColorAdjuster()
-    {
+    public static IImageColorAdjuster CreateColorAdjuster() {
         return new ImageColorAdjuster();
     }
 
@@ -74,8 +66,7 @@ public static class ImageProcessorFactory
     /// 创建图像信息提取器实例
     /// </summary>
     /// <returns>图像信息提取器实例</returns>
-    public static IImageInfoExtractor CreateInfoExtractor()
-    {
+    public static IImageInfoExtractor CreateInfoExtractor() {
         return new ImageInfoExtractor();
     }
 
@@ -85,10 +76,8 @@ public static class ImageProcessorFactory
     /// <param name="processorType">处理器类型</param>
     /// <returns>图像处理器实例</returns>
     /// <exception cref="ArgumentException">不支持的处理器类型</exception>
-    public static IImageProcessor CreateProcessor(ImageProcessorType processorType)
-    {
-        return processorType switch
-        {
+    public static IImageProcessor CreateProcessor(ImageProcessorType processorType) {
+        return processorType switch {
             ImageProcessorType.FormatConverter => CreateFormatConverter(),
             ImageProcessorType.Resizer => CreateResizer(),
             ImageProcessorType.Compressor => CreateCompressor(),
@@ -105,8 +94,7 @@ public static class ImageProcessorFactory
 /// <summary>
 /// 图像处理器类型枚举
 /// </summary>
-public enum ImageProcessorType
-{
+public enum ImageProcessorType {
     /// <summary>
     /// 格式转换器
     /// </summary>

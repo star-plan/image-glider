@@ -14,8 +14,7 @@ namespace ImageGlider;
 /// 图片格式转换服务类，提供图片格式转换的核心功能
 /// 注意：此类已重构为使用组合模式，内部委托给专门的处理器类
 /// </summary>
-public class ImageConverter
-{
+public class ImageConverter {
     private static readonly IImageFormatConverter _formatConverter = ImageProcessorFactory.CreateFormatConverter();
     private static readonly IImageResizer _resizer = ImageProcessorFactory.CreateResizer();
     private static readonly IImageCompressor _compressor = ImageProcessorFactory.CreateCompressor();
@@ -24,6 +23,7 @@ public class ImageConverter
     private static readonly IImageMetadataStripper _metadataStripper = ImageProcessorFactory.CreateMetadataStripper();
     private static readonly IImageColorAdjuster _colorAdjuster = ImageProcessorFactory.CreateColorAdjuster();
     private static readonly IImageInfoExtractor _infoExtractor = ImageProcessorFactory.CreateInfoExtractor();
+
     /// <summary>
     /// 转换单个图片文件格式
     /// </summary>
@@ -31,8 +31,7 @@ public class ImageConverter
     /// <param name="targetFilePath">目标文件路径</param>
     /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
     /// <returns>转换是否成功</returns>
-    public static bool ConvertImage(string sourceFilePath, string targetFilePath, int quality = 90)
-    {
+    public static bool ConvertImage(string sourceFilePath, string targetFilePath, int quality = 90) {
         return _formatConverter.ProcessImage(sourceFilePath, targetFilePath, quality);
     }
 
@@ -50,9 +49,9 @@ public class ImageConverter
         string outputDirectory,
         string sourceExtension,
         string targetExtension,
-        int quality = 90)
-    {
-        return _formatConverter.BatchConvert(sourceDirectory, outputDirectory, sourceExtension, targetExtension, quality);
+        int quality = 90) {
+        return _formatConverter.BatchConvert(sourceDirectory, outputDirectory, sourceExtension, targetExtension,
+            quality);
     }
 
     /// <summary>
@@ -65,8 +64,8 @@ public class ImageConverter
     /// <param name="resizeMode">调整模式</param>
     /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
     /// <returns>调整是否成功</returns>
-    public static bool ResizeImage(string sourceFilePath, string targetFilePath, int? width = null, int? height = null, ImageGlider.Enums.ResizeMode resizeMode = ImageGlider.Enums.ResizeMode.KeepAspectRatio, int quality = 90)
-    {
+    public static bool ResizeImage(string sourceFilePath, string targetFilePath, int? width = null, int? height = null,
+        ImageGlider.Enums.ResizeMode resizeMode = ImageGlider.Enums.ResizeMode.KeepAspectRatio, int quality = 90) {
         return _resizer.ResizeImage(sourceFilePath, targetFilePath, width, height, resizeMode, quality);
     }
 
@@ -88,9 +87,9 @@ public class ImageConverter
         int? width = null,
         int? height = null,
         ImageGlider.Enums.ResizeMode resizeMode = ImageGlider.Enums.ResizeMode.KeepAspectRatio,
-        int quality = 90)
-    {
-        return _resizer.BatchResize(sourceDirectory, outputDirectory, sourceExtension, width, height, resizeMode, quality);
+        int quality = 90) {
+        return _resizer.BatchResize(sourceDirectory, outputDirectory, sourceExtension, width, height, resizeMode,
+            quality);
     }
 
     /// <summary>
@@ -101,8 +100,8 @@ public class ImageConverter
     /// <param name="compressionLevel">压缩级别（1-100，数值越小压缩越强）</param>
     /// <param name="preserveMetadata">是否保留元数据</param>
     /// <returns>压缩是否成功</returns>
-    public static bool CompressImage(string sourceFilePath, string targetFilePath, int compressionLevel = 75, bool preserveMetadata = false)
-    {
+    public static bool CompressImage(string sourceFilePath, string targetFilePath, int compressionLevel = 75,
+        bool preserveMetadata = false) {
         return _compressor.CompressImage(sourceFilePath, targetFilePath, compressionLevel, preserveMetadata);
     }
 
@@ -120,9 +119,9 @@ public class ImageConverter
         string outputDirectory,
         string sourceExtension,
         int compressionLevel = 75,
-        bool preserveMetadata = false)
-    {
-        return _compressor.BatchCompress(sourceDirectory, outputDirectory, sourceExtension, compressionLevel, preserveMetadata);
+        bool preserveMetadata = false) {
+        return _compressor.BatchCompress(sourceDirectory, outputDirectory, sourceExtension, compressionLevel,
+            preserveMetadata);
     }
 
     /// <summary>
@@ -136,8 +135,8 @@ public class ImageConverter
     /// <param name="height">裁剪区域高度（像素）</param>
     /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
     /// <returns>裁剪是否成功</returns>
-    public static bool CropImage(string sourceFilePath, string targetFilePath, int x, int y, int width, int height, int quality = 90)
-    {
+    public static bool CropImage(string sourceFilePath, string targetFilePath, int x, int y, int width, int height,
+        int quality = 90) {
         return _cropper.CropImage(sourceFilePath, targetFilePath, x, y, width, height, quality);
     }
 
@@ -152,9 +151,10 @@ public class ImageConverter
     /// <param name="heightPercent">裁剪区域高度百分比（0-100）</param>
     /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
     /// <returns>裁剪是否成功</returns>
-    public static bool CropImageByPercent(string sourceFilePath, string targetFilePath, float xPercent, float yPercent, float widthPercent, float heightPercent, int quality = 90)
-    {
-        return _cropper.CropImageByPercent(sourceFilePath, targetFilePath, xPercent, yPercent, widthPercent, heightPercent, quality);
+    public static bool CropImageByPercent(string sourceFilePath, string targetFilePath, float xPercent, float yPercent,
+        float widthPercent, float heightPercent, int quality = 90) {
+        return _cropper.CropImageByPercent(sourceFilePath, targetFilePath, xPercent, yPercent, widthPercent,
+            heightPercent, quality);
     }
 
     /// <summary>
@@ -166,8 +166,8 @@ public class ImageConverter
     /// <param name="height">裁剪区域高度（像素）</param>
     /// <param name="quality">JPEG 质量（仅对 JPEG 格式有效，范围 1-100）</param>
     /// <returns>裁剪是否成功</returns>
-    public static bool CropImageCenter(string sourceFilePath, string targetFilePath, int width, int height, int quality = 90)
-    {
+    public static bool CropImageCenter(string sourceFilePath, string targetFilePath, int width, int height,
+        int quality = 90) {
         return _cropper.CropImageCenter(sourceFilePath, targetFilePath, width, height, quality);
     }
 
@@ -191,8 +191,7 @@ public class ImageConverter
         int y,
         int width,
         int height,
-        int quality = 90)
-    {
+        int quality = 90) {
         return _cropper.BatchCrop(sourceDirectory, outputDirectory, sourceExtension, x, y, width, height, quality);
     }
 
@@ -212,8 +211,7 @@ public class ImageConverter
         string sourceExtension,
         int width,
         int height,
-        int quality = 90)
-    {
+        int quality = 90) {
         return _cropper.BatchCropCenter(sourceDirectory, outputDirectory, sourceExtension, width, height, quality);
     }
 
@@ -227,8 +225,8 @@ public class ImageConverter
     /// <param name="maxSize">缩略图最大边长（像素）</param>
     /// <param name="quality">JPEG 质量</param>
     /// <returns>生成是否成功</returns>
-    public static bool GenerateThumbnail(string sourceFilePath, string targetFilePath, int maxSize = 150, int quality = 90)
-    {
+    public static bool GenerateThumbnail(string sourceFilePath, string targetFilePath, int maxSize = 150,
+        int quality = 90) {
         return _resizer.GenerateThumbnail(sourceFilePath, targetFilePath, maxSize, quality);
     }
 
@@ -246,8 +244,7 @@ public class ImageConverter
         string outputDirectory,
         string sourceExtension,
         int maxSize = 150,
-        int quality = 90)
-    {
+        int quality = 90) {
         return _resizer.BatchGenerateThumbnails(sourceDirectory, outputDirectory, sourceExtension, maxSize, quality);
     }
 
@@ -267,9 +264,11 @@ public class ImageConverter
     /// <param name="fontColor">字体颜色（十六进制，如 #FFFFFF）</param>
     /// <param name="quality">JPEG 质量</param>
     /// <returns>添加水印是否成功</returns>
-    public static bool AddTextWatermark(string sourceFilePath, string targetFilePath, string text, WatermarkPosition position = WatermarkPosition.BottomRight, int opacity = 50, int fontSize = 24, string fontColor = "#FFFFFF", int quality = 90)
-    {
-        return _watermark.AddTextWatermark(sourceFilePath, targetFilePath, text, position, opacity, fontSize, fontColor, quality);
+    public static bool AddTextWatermark(string sourceFilePath, string targetFilePath, string text,
+        WatermarkPosition position = WatermarkPosition.BottomRight, int opacity = 50, int fontSize = 24,
+        string fontColor = "#FFFFFF", int quality = 90) {
+        return _watermark.AddTextWatermark(sourceFilePath, targetFilePath, text, position, opacity, fontSize, fontColor,
+            quality);
     }
 
     /// <summary>
@@ -283,9 +282,11 @@ public class ImageConverter
     /// <param name="scale">缩放比例（0.1-2.0）</param>
     /// <param name="quality">JPEG 质量</param>
     /// <returns>添加水印是否成功</returns>
-    public static bool AddImageWatermark(string sourceFilePath, string targetFilePath, string watermarkImagePath, WatermarkPosition position = WatermarkPosition.BottomRight, int opacity = 50, float scale = 1.0f, int quality = 90)
-    {
-        return _watermark.AddImageWatermark(sourceFilePath, targetFilePath, watermarkImagePath, position, opacity, scale, quality);
+    public static bool AddImageWatermark(string sourceFilePath, string targetFilePath, string watermarkImagePath,
+        WatermarkPosition position = WatermarkPosition.BottomRight, int opacity = 50, float scale = 1.0f,
+        int quality = 90) {
+        return _watermark.AddImageWatermark(sourceFilePath, targetFilePath, watermarkImagePath, position, opacity,
+            scale, quality);
     }
 
     /// <summary>
@@ -310,9 +311,9 @@ public class ImageConverter
         int opacity = 50,
         int fontSize = 24,
         string fontColor = "#FFFFFF",
-        int quality = 90)
-    {
-        return _watermark.BatchAddTextWatermark(sourceDirectory, outputDirectory, sourceExtension, text, position, opacity, fontSize, fontColor, quality);
+        int quality = 90) {
+        return _watermark.BatchAddTextWatermark(sourceDirectory, outputDirectory, sourceExtension, text, position,
+            opacity, fontSize, fontColor, quality);
     }
 
     /// <summary>
@@ -335,9 +336,9 @@ public class ImageConverter
         WatermarkPosition position = WatermarkPosition.BottomRight,
         int opacity = 50,
         float scale = 1.0f,
-        int quality = 90)
-    {
-        return _watermark.BatchAddImageWatermark(sourceDirectory, outputDirectory, sourceExtension, watermarkImagePath, position, opacity, scale, quality);
+        int quality = 90) {
+        return _watermark.BatchAddImageWatermark(sourceDirectory, outputDirectory, sourceExtension, watermarkImagePath,
+            position, opacity, scale, quality);
     }
 
     #endregion
@@ -362,9 +363,9 @@ public class ImageConverter
         bool stripExif = true,
         bool stripIcc = false,
         bool stripXmp = true,
-        int quality = 90)
-    {
-        return _metadataStripper.StripMetadata(sourceFilePath, targetFilePath, stripAll, stripExif, stripIcc, stripXmp, quality);
+        int quality = 90) {
+        return _metadataStripper.StripMetadata(sourceFilePath, targetFilePath, stripAll, stripExif, stripIcc, stripXmp,
+            quality);
     }
 
     /// <summary>
@@ -379,9 +380,11 @@ public class ImageConverter
     /// <param name="stripXmp">是否清理XMP数据</param>
     /// <param name="quality">JPEG 质量</param>
     /// <returns>清理结果信息</returns>
-    public static BatchStripResult BatchStripMetadata(string sourceDirectory, string outputDirectory, string sourceExtension, bool stripAll = true, bool stripExif = true, bool stripIcc = false, bool stripXmp = true, int quality = 90)
-    {
-        return _metadataStripper.BatchStripMetadata(sourceDirectory, outputDirectory, sourceExtension, stripAll, stripExif, stripIcc, stripXmp, quality);
+    public static BatchStripResult BatchStripMetadata(string sourceDirectory, string outputDirectory,
+        string sourceExtension, bool stripAll = true, bool stripExif = true, bool stripIcc = false,
+        bool stripXmp = true, int quality = 90) {
+        return _metadataStripper.BatchStripMetadata(sourceDirectory, outputDirectory, sourceExtension, stripAll,
+            stripExif, stripIcc, stripXmp, quality);
     }
 
     #endregion
@@ -408,9 +411,9 @@ public class ImageConverter
         float saturation = 0,
         float hue = 0,
         float gamma = 1.0f,
-        int quality = 90)
-    {
-        return _colorAdjuster.AdjustColor(sourceFilePath, targetFilePath, brightness, contrast, saturation, hue, gamma, quality);
+        int quality = 90) {
+        return _colorAdjuster.AdjustColor(sourceFilePath, targetFilePath, brightness, contrast, saturation, hue, gamma,
+            quality);
     }
 
     /// <summary>
@@ -435,9 +438,9 @@ public class ImageConverter
         float saturation = 0,
         float hue = 0,
         float gamma = 1.0f,
-        int quality = 90)
-    {
-        return _colorAdjuster.BatchAdjustColor(sourceDirectory, outputDirectory, sourceExtension, brightness, contrast, saturation, hue, gamma, quality);
+        int quality = 90) {
+        return _colorAdjuster.BatchAdjustColor(sourceDirectory, outputDirectory, sourceExtension, brightness, contrast,
+            saturation, hue, gamma, quality);
     }
 
     #endregion
@@ -449,8 +452,7 @@ public class ImageConverter
     /// </summary>
     /// <param name="filePath">图片文件路径</param>
     /// <returns>图片信息对象</returns>
-    public static ImageInfo GetImageInfo(string filePath)
-    {
+    public static ImageInfo GetImageInfo(string filePath) {
         return _infoExtractor.ExtractImageInfo(filePath);
     }
 
@@ -461,11 +463,10 @@ public class ImageConverter
     /// <param name="searchPattern">搜索模式（如 "*.jpg"）</param>
     /// <param name="recursive">是否递归搜索子目录</param>
     /// <returns>图片信息列表</returns>
-    public static List<ImageInfo> BatchGetImageInfo(string directory, string searchPattern = "*.*", bool recursive = false)
-    {
+    public static List<ImageInfo> BatchGetImageInfo(string directory, string searchPattern = "*.*",
+        bool recursive = false) {
         return _infoExtractor.BatchExtractImageInfo(directory, searchPattern, recursive);
     }
 
     #endregion
-
 }

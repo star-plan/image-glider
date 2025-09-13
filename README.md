@@ -579,23 +579,35 @@ dotnet publish src/ImageGlider.Cli -c Release -r linux-x64 -p:PublishAot=true -p
 
 ### ⚙️ 技术实现
 
-ImageGlider 通过 **ImageMagick.NET** 库提供 AVIF 格式支持：
+ImageGlider 提供多种 AVIF 格式支持方案，**优先使用 FFmpeg**，备选 ImageMagick.NET：
 
+#### 🚀 FFmpeg 支持（推荐）
+- **高性能编码**: 使用 `libaom-av1` 编码器，性能更优
+- **并行处理**: 支持多线程 (`-threads 8`) 和行并行 (`-row-mt 1`)
+- **速度优化**: 可调节编码速度 (`-cpu-used 6`，范围 0-8）
+- **质量控制**: 使用 CRF 模式精确控制质量
+- **自动检测**: 系统自动检测 FFmpeg 可用性
+
+#### 🔄 ImageMagick.NET 备选
 - **编码器**: 使用 AV1 编码器进行高效压缩
 - **质量控制**: 支持 1-100 的质量参数调节
 - **兼容性**: 自动处理格式检测和转换
-- **性能优化**: 针对批量处理进行了优化
+- **无依赖**: 无需额外安装 FFmpeg
 
 ### 💡 使用建议
 
+- **FFmpeg 安装**: 推荐安装 FFmpeg 以获得最佳 AVIF 转换性能
 - **Web 应用**: AVIF 格式特别适合 Web 图像优化
-- **质量设置**: 推荐质量参数 75-85 获得最佳压缩比和画质平衡
+- **质量设置**: 
+  - FFmpeg: 推荐质量参数 25-35 (CRF 值)
+  - ImageMagick: 推荐质量参数 75-85
+- **性能优化**: FFmpeg 支持多线程，适合批量处理大量图像
 - **兼容性**: 对于需要广泛兼容的场景，建议同时提供 WebP 或 JPEG 备选
-- **批量转换**: 利用批量转换功能可高效处理大量图像
 
 ## 🙏 致谢
 
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) - 强大的跨平台图像处理库
+- [FFmpeg](https://ffmpeg.org/) - 领先的多媒体处理框架，提供高性能 AVIF 编码支持
 - [ImageMagick.NET](https://github.com/dlemstra/Magick.NET) - ImageMagick 的 .NET 绑定，提供 AVIF 格式支持
 - [.NET 团队](https://github.com/dotnet) - 提供优秀的开发平台
 - 所有贡献者和用户的支持
